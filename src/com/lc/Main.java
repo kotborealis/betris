@@ -22,6 +22,7 @@ public class Main {
 
     static public int window_width = 800;
     static public int window_height = 600;
+    static Game game;
 
     private void run() {
         init();
@@ -52,7 +53,8 @@ public class Main {
 
         // Setup a key callback. It will be called every time a key is pressed, repeated or released.
         glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
-            if ( key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE )
+            if(game != null) game.handleKey(key, action);
+            if(key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE)
                 glfwSetWindowShouldClose(window, true);
         });
 
@@ -92,7 +94,7 @@ public class Main {
         // bindings available for use.
         GL.createCapabilities();
 
-        Game game = new Game();
+        game = new Game();
 
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
@@ -102,7 +104,6 @@ public class Main {
 
             game.render();
             game.update();
-
             glfwSwapBuffers(window); // swap the color buffers
 
             // Poll for window events. The key callback above will only be

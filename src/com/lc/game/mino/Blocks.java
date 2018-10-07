@@ -10,7 +10,7 @@ public class Blocks {
     public static Block Z = new Block(BlockType.Z, false);
     public static Block J = new Block(BlockType.J, false);
     public static Block L = new Block(BlockType.L, false);
-    public static Block Empty = new Block(BlockType.Empty, false);
+    public static Block E = new Block(BlockType.Empty, false);
 
     public static Block I_shadow = new Block(BlockType.I, true);
     public static Block O_shadow = new Block(BlockType.O, true);

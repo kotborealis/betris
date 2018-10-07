@@ -3,11 +3,10 @@ package com.lc.game;
 import com.lc.Main;
 import com.lc.game.mino.Block;
 import com.lc.game.mino.BlockType;
-import com.lc.game.mino.Blocks;
 import com.lc.game.tetramino.Tetramino;
-import com.lc.game.tetramino.Tetraminos;
 import com.lc.texture.Texture;
 
+import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 
 public class Game {
@@ -15,15 +14,70 @@ public class Game {
     private float w_width;
     private float w_height;
 
-    private Tetramino currentTetramino;
-    private float currentTetraminoX;
-    private float currentTetraminoY;
+    private Tetramino cur;
+    private int x;
+    private int y;
+    private int queuedMove = 0;
+    private int queuedRotateRight = 0;
+    private int queuedRotateLeft = 0;
+
     private Block well[][] = new Block[10][24];
 
-    public void update(){
+    private long lastNanos = System.nanoTime();
 
+    public void handleKey(int key, int action) {
+        if(action == GLFW_PRESS || action == GLFW_REPEAT){
+            if(key == GLFW_KEY_LEFT) queuedMove--;
+            else if(key == GLFW_KEY_RIGHT) queuedMove++;
+            if(key == GLFW_KEY_Z) queuedRotateLeft++;
+            if(key == GLFW_KEY_X) queuedRotateRight++;
+        }
     }
 
+    public void update(){
+        System.out.println(queuedRotateLeft);
+        if(queuedRotateLeft > 0)
+            while(queuedRotateLeft-- > 0)
+                cur.rotateLeft();
+        if(queuedRotateRight > 0)
+            while(queuedRotateRight-- > 0)
+                cur.rotateRight();
+
+        float drop_ps = 2.5f;
+        long targetNanos = lastNanos  + (long) (1_000_000_000.0f / drop_ps) - 1_000_000L;
+        if(System.nanoTime() >= targetNanos){
+            lastNanos = System.nanoTime();
+            y++;
+
+            if(y + cur.maxY() >= 20){
+                for(int i = 0; i < cur.maxX(); i++)
+                    for(int j = 0; j < cur.maxY(); j++){
+                        well[x + i][y + j] = cur.value[i][j];
+                    }
+
+
+                x = 0;
+                y = 2;
+                cur = new Tetramino(BlockType.O);
+            }
+        }
+
+        x += queuedMove;
+        queuedMove = 0;
+
+        if(x < 0) x = 0;
+        if(x + cur.maxX() >= 10) x = x - cur.maxX();
+    }
+
+    private void syncUpdateRate(float fps, long lastNanos) {
+        long targetNanos = lastNanos + (long) (1_000_000_000.0f / fps) - 1_000_000L;  // subtract 1 ms to skip the last sleep call
+        try {
+            while (System.nanoTime() < targetNanos) {
+                Thread.sleep(1);
+            }
+        }
+        catch (InterruptedException ignore) {}
+    }
 
     private void renderProjection(){
         glMatrixMode(GL_PROJECTION);
@@ -72,7 +126,7 @@ public class Game {
 
         glColor3f(137/255.f, 42/255.f, 118/225.f);
         glBegin(GL_LINES);
-            for(int i = 1; i < 16; i++){
+            for(int i = 1; i < 20; i++){
                 glVertex2f(w_width/2 - Block.size * 10 / 2, i * Block.size);
                 glVertex2f(w_width/2 + Block.size * 10 / 2, i * Block.size);
             }
@@ -100,7 +154,7 @@ public class Game {
     private void renderTetramino(){
         float left_edge = w_width/2 - Block.size * 10 / 2;
         float top_edge = -50;
-        currentTetramino.render(currentTetraminoX, currentTetraminoY, left_edge, top_edge);
+        cur.render(x, y, left_edge, top_edge);
     }
 
     public void render(){
@@ -121,13 +175,13 @@ public class Game {
 //        well[0][3] = Blocks.I;
 //        well[1][0] = Blocks.I_shadow;
 //        well[2][0] = Blocks.I_shadow;
-//        well[3][0] = Blocks.Empty;
+//        well[3][0] = Blocks.E;
 //        well[4][0] = Blocks.I_shadow;
 //        well[5][0] = Blocks.I_shadow;
 
-        currentTetramino = new Tetramino(BlockType.T);
-        currentTetraminoX = 5;
-        currentTetraminoY = 2;
+        cur = new Tetramino(BlockType.T);
+        x = 0;
+        y = 2;
 
         background = Texture.loadTexture("res/select00.jpg");
     }
