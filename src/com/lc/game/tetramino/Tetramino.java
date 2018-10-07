@@ -16,20 +16,40 @@ public class Tetramino {
             }
     }
 
-    public int minX(){
-        return 0;
-    }
-
-    public int maxX(){
-        return 1;
-    }
-
     public int minY(){
-        return 0;
+        int val = 9999;
+        for(int x = 0; x < 4; x++)
+            for(int y = 0; y < 4; y++)
+                if(value[x][y] != Blocks.E && val > x)
+                    val = x;
+        return val;
     }
 
     public int maxY(){
-        return 1;
+        int val = -999;
+        for(int x = 0; x < 4; x++)
+            for(int y = 0; y < 4; y++)
+                if(value[x][y] != Blocks.E && val < x)
+                    val = x;
+        return val;
+    }
+
+    public int minX(){
+        int val = 9999;
+        for(int x = 0; x < 4; x++)
+            for(int y = 0; y < 4; y++)
+                if(value[x][y] != Blocks.E && val > y)
+                    val = y;
+        return val;
+    }
+
+    public int maxX(){
+        int val = -999;
+        for(int x = 0; x < 4; x++)
+            for(int y = 0; y < 4; y++)
+                if(value[x][y] != Blocks.E && val < y)
+                    val = y;
+        return val;
     }
 
     public void rotateRight(){

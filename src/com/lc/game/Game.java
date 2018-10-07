@@ -3,6 +3,7 @@ package com.lc.game;
 import com.lc.Main;
 import com.lc.game.mino.Block;
 import com.lc.game.mino.BlockType;
+import com.lc.game.mino.Blocks;
 import com.lc.game.tetramino.Tetramino;
 import com.lc.texture.Texture;
 
@@ -35,38 +36,39 @@ public class Game {
     }
 
     public void update(){
-        System.out.println(queuedRotateLeft);
-        if(queuedRotateLeft > 0)
-            while(queuedRotateLeft-- > 0)
-                cur.rotateLeft();
-        if(queuedRotateRight > 0)
-            while(queuedRotateRight-- > 0)
-                cur.rotateRight();
-
         float drop_ps = 2.5f;
         long targetNanos = lastNanos  + (long) (1_000_000_000.0f / drop_ps) - 1_000_000L;
         if(System.nanoTime() >= targetNanos){
             lastNanos = System.nanoTime();
             y++;
 
-            if(y + cur.maxY() >= 20){
+            if(y + cur.maxY() >= 21){
                 for(int i = 0; i < cur.maxX(); i++)
                     for(int j = 0; j < cur.maxY(); j++){
                         well[x + i][y + j] = cur.value[i][j];
+                        System.out.println(x+i);
+                        System.out.println(y+j);
                     }
 
 
                 x = 0;
                 y = 2;
-                cur = new Tetramino(BlockType.O);
+                cur = new Tetramino(BlockType.T);
             }
         }
+
+        for(int i = 0; i < queuedRotateLeft; i++)
+            cur.rotateLeft();
+        queuedRotateLeft = 0;
+        for(int i = 0; i < queuedRotateRight; i++)
+            cur.rotateRight();
+        queuedRotateRight = 0;
 
         x += queuedMove;
         queuedMove = 0;
 
         if(x < 0) x = 0;
-        if(x + cur.maxX() >= 10) x = x - cur.maxX();
+        if(x + cur.maxX() >= 10) x = x - (x + cur.maxX() - 9);
     }
 
     private void syncUpdateRate(float fps, long lastNanos) {
