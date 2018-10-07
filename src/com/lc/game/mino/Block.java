@@ -7,36 +7,39 @@ import static org.lwjgl.opengl.GL11.*;
 public class Block {
     public static final float size = 25;
 
-    private float x;
-    private float y;
-    private Texture tex;
-    private boolean shadow;
-
-    public void render(){
-        if(shadow)
-            glColor4f(.5f,.5f,.5f, 1);
-        else
-            glColor4f(1,1,1, 1);
-
-        tex.bind();
-        glEnable(GL_TEXTURE_2D);
-        glBegin(GL_QUADS);
-            glTexCoord2f(0,1);
-            glVertex2f(x, y);
-            glTexCoord2f(1,1);
-            glVertex2f(x + size, y);
-            glTexCoord2f(1,0);
-            glVertex2f(x + size, y + size);
-            glTexCoord2f(0,0);
-            glVertex2f(x, y + size);
-        glEnd();
+    public float getX() {
+        return x;
     }
 
-    public Block(BlockType type, float x, float y, boolean shadow){
-        BlockTextures.init();
-
+    public void setX(float x) {
         this.x = x;
+    }
+
+    public float getY() {
+        return y;
+    }
+
+    public void setY(float y) {
         this.y = y;
+    }
+
+    private float x;
+    private float y;
+
+    public Texture getTex() {
+        return tex;
+    }
+
+    private Texture tex;
+
+    public boolean isShadow() {
+        return shadow;
+    }
+
+    private boolean shadow;
+
+    public Block(BlockType type, boolean shadow){
+        BlockTextures.init();
 
         this.shadow = shadow;
 

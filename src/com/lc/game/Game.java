@@ -15,6 +15,7 @@ public class Game {
     private Block[][] well;
 
     public void update(){
+
     }
 
 
@@ -77,13 +78,36 @@ public class Game {
     }
 
     private void renderWell(){
+        float left_edge = w_width/2 - Block.size * 10 / 2;
+        float top_edge = 100;
+
+        glEnable(GL_TEXTURE_2D);
+
         for(int x = 0; x < 10; x++){
             for(int y = 0; y < 16; y++){
                 if(well[x][y] != null){
-                    well[x][y].render();
+                    Block b = well[x][y];
+                    b.getTex().bind();
+
+                    if(b.isShadow())
+                        glColor4f(.5f,.5f,.5f, 1);
+                    else
+                        glColor4f(1,1,1, 1);
+
+                    glBegin(GL_QUADS);
+                    glTexCoord2f(0,1);
+                    glVertex2f(left_edge + x * Block.size, top_edge + y * Block.size);
+                    glTexCoord2f(1,1);
+                    glVertex2f(left_edge + x * Block.size + Block.size, top_edge + y * Block.size);
+                    glTexCoord2f(1,0);
+                    glVertex2f(left_edge + x * Block.size + Block.size, top_edge + y * Block.size + Block.size);
+                    glTexCoord2f(0,0);
+                    glVertex2f(left_edge + x * Block.size, top_edge + y * Block.size + Block.size);
+                    glEnd();
                 }
             }
         }
+
     }
 
     public void render(){
@@ -98,20 +122,20 @@ public class Game {
         w_width = Main.window_width;
 
         well = new Block[10][16];
-        well[0][1] = new Block(BlockType.I, 25, 0, false);
-        well[0][2] = new Block(BlockType.J, 50, 0, false);
-        well[0][3] = new Block(BlockType.L, 75, 0, false);
-        well[0][4] = new Block(BlockType.Z, 100, 0, false);
-        well[0][5] = new Block(BlockType.S, 125, 0, false);
-        well[0][6] = new Block(BlockType.O, 150, 0, false);
-        well[0][7] = new Block(BlockType.T, 175, 0, false);
-        well[1][1] = new Block(BlockType.I, 25, 25, true);
-        well[1][2] = new Block(BlockType.J, 50, 25, true);
-        well[1][3] = new Block(BlockType.L, 75, 25, true);
-        well[1][4] = new Block(BlockType.Z, 100, 25, true);
-        well[1][5] = new Block(BlockType.S, 125, 25, true);
-        well[1][6] = new Block(BlockType.O, 150, 25, true);
-        well[1][7] = new Block(BlockType.T, 175, 25, true);
+        well[0][1] = new Block(BlockType.I, false);
+        well[0][2] = new Block(BlockType.J, false);
+        well[0][3] = new Block(BlockType.L, false);
+        well[0][4] = new Block(BlockType.Z, false);
+        well[0][5] = new Block(BlockType.S, false);
+        well[0][6] = new Block(BlockType.O,  false);
+        well[0][7] = new Block(BlockType.T,  false);
+        well[1][1] = new Block(BlockType.I,  true);
+        well[1][2] = new Block(BlockType.J,  true);
+        well[1][3] = new Block(BlockType.L,  true);
+        well[1][4] = new Block(BlockType.Z,  true);
+        well[1][5] = new Block(BlockType.S,  true);
+        well[1][6] = new Block(BlockType.O,  true);
+        well[1][7] = new Block(BlockType.T,  true);
 
         background = Texture.loadTexture("res/select00.jpg");
     }
