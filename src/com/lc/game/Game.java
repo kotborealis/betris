@@ -2,8 +2,9 @@ package com.lc.game;
 
 import com.lc.Main;
 import com.lc.game.mino.Block;
-import com.lc.game.mino.BlockType;
 import com.lc.game.mino.Blocks;
+import com.lc.game.tetramino.Tetramino;
+import com.lc.game.tetramino.Tetraminos;
 import com.lc.texture.Texture;
 
 import static org.lwjgl.opengl.GL11.*;
@@ -17,6 +18,14 @@ public class Game {
 
     public void update(){
 
+    }
+
+    public void spawnTetramino(Tetramino tetramino){
+        for(int x = 0; x < 4; x++){
+            for(int y = 0; y < 4; y++){
+                well[y][x] = tetramino.value[x][y];
+            }
+        }
     }
 
 
@@ -108,7 +117,6 @@ public class Game {
                 }
             }
         }
-
     }
 
     public void render(){
@@ -122,16 +130,26 @@ public class Game {
         w_height = Main.window_height;
         w_width = Main.window_width;
 
+        Tetraminos.init();
+
         well = new Block[10][16];
-        well[0][0] = Blocks.I;
-        well[0][1] = Blocks.I;
-        well[0][2] = Blocks.I;
-        well[0][3] = Blocks.I;
-        well[1][0] = Blocks.I_shadow;
-        well[2][0] = Blocks.I_shadow;
-        well[3][0] = Blocks.Empty;
-        well[4][0] = Blocks.I_shadow;
-        well[5][0] = Blocks.I_shadow;
+
+        spawnTetramino(Tetraminos.I);
+
+//        well[0][0] = Blocks.I;
+//        well[0][1] = Blocks.I;
+
+//        well[0][0] = Blocks.I;
+//        well[0][1] = Blocks.I;
+//        well[0][2] = Blocks.I;
+//        well[0][3] = Blocks.I;
+//        well[1][0] = Blocks.I_shadow;
+//        well[2][0] = Blocks.I_shadow;
+//        well[3][0] = Blocks.Empty;
+//        well[4][0] = Blocks.I_shadow;
+//        well[5][0] = Blocks.I_shadow;
+
+
 
         background = Texture.loadTexture("res/select00.jpg");
     }
