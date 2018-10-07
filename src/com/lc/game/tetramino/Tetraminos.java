@@ -5,58 +5,54 @@ import com.lc.game.mino.BlockType;
 import com.lc.game.mino.Blocks;
 
 public class Tetraminos {
-    public static Tetramino I = new Tetramino();
-    public static Tetramino O = new Tetramino();
-    public static Tetramino T = new Tetramino();
-    public static Tetramino S = new Tetramino();
-    public static Tetramino Z = new Tetramino();
-    public static Tetramino L = new Tetramino();
-    public static Tetramino J = new Tetramino();
+    static Block tetraminos[][][] = new Block[8][4][4];
+    static boolean init_done = false;
 
     public static void init(){
-        I.value = new Block[][]{
+        init_done = true;
+        tetraminos[BlockType.I.ordinal()] = new Block[][]{
                 {Blocks.I, Blocks.Empty, Blocks.Empty, Blocks.Empty},
                 {Blocks.I, Blocks.Empty, Blocks.Empty, Blocks.Empty},
                 {Blocks.I, Blocks.Empty, Blocks.Empty, Blocks.Empty},
                 {Blocks.I, Blocks.Empty, Blocks.Empty, Blocks.Empty}
         };
 
-        O.value = new Block[][]{
+        tetraminos[BlockType.O.ordinal()] = new Block[][]{
                 {Blocks.O,     Blocks.O,     Blocks.Empty, Blocks.Empty},
                 {Blocks.O,     Blocks.O,     Blocks.Empty, Blocks.Empty},
                 {Blocks.Empty, Blocks.Empty, Blocks.Empty, Blocks.Empty},
                 {Blocks.Empty, Blocks.Empty, Blocks.Empty, Blocks.Empty}
         };
 
-        T.value = new Block[][]{
+        tetraminos[BlockType.T.ordinal()] = new Block[][]{
                 {Blocks.Empty, Blocks.T,     Blocks.Empty, Blocks.Empty},
                 {Blocks.T,     Blocks.T,     Blocks.T,     Blocks.Empty},
                 {Blocks.Empty, Blocks.Empty, Blocks.Empty, Blocks.Empty},
                 {Blocks.Empty, Blocks.Empty, Blocks.Empty, Blocks.Empty}
         };
 
-        S.value = new Block[][]{
+        tetraminos[BlockType.S.ordinal()] = new Block[][]{
                 {Blocks.Empty, Blocks.Empty, Blocks.Empty, Blocks.Empty},
                 {Blocks.Empty, Blocks.S,     Blocks.S,     Blocks.Empty},
                 {Blocks.S,     Blocks.S,     Blocks.Empty, Blocks.Empty},
                 {Blocks.Empty, Blocks.Empty, Blocks.Empty, Blocks.Empty}
         };
 
-        Z.value = new Block[][]{
+        tetraminos[BlockType.Z.ordinal()] = new Block[][]{
                 {Blocks.Z,     Blocks.Z,     Blocks.Empty, Blocks.Empty},
                 {Blocks.Empty, Blocks.Z,     Blocks.Z,     Blocks.Empty},
                 {Blocks.Empty, Blocks.Empty, Blocks.Empty, Blocks.Empty},
                 {Blocks.Empty, Blocks.Empty, Blocks.Empty, Blocks.Empty}
         };
 
-        L.value = new Block[][]{
+        tetraminos[BlockType.L.ordinal()] = new Block[][]{
                 {Blocks.L,     Blocks.Empty, Blocks.Empty, Blocks.Empty},
                 {Blocks.L,     Blocks.L,     Blocks.L,     Blocks.Empty},
                 {Blocks.Empty, Blocks.Empty, Blocks.Empty, Blocks.Empty},
                 {Blocks.Empty, Blocks.Empty, Blocks.Empty, Blocks.Empty}
         };
 
-        J.value = new Block[][]{
+        tetraminos[BlockType.J.ordinal()] = new Block[][]{
                 {Blocks.J,     Blocks.Empty, Blocks.Empty, Blocks.Empty},
                 {Blocks.J,     Blocks.J,     Blocks.J,     Blocks.Empty},
                 {Blocks.Empty, Blocks.Empty, Blocks.Empty, Blocks.Empty},

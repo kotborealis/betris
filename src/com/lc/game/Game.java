@@ -2,6 +2,7 @@ package com.lc.game;
 
 import com.lc.Main;
 import com.lc.game.mino.Block;
+import com.lc.game.mino.BlockType;
 import com.lc.game.mino.Blocks;
 import com.lc.game.tetramino.Tetramino;
 import com.lc.game.tetramino.Tetraminos;
@@ -14,18 +15,13 @@ public class Game {
     private float w_width;
     private float w_height;
 
-    private Block[][] well;
+    private Tetramino currentTetramino;
+    private float currentTetraminoX;
+    private float currentTetraminoY;
+    private Block well[][] = new Block[10][16];
 
     public void update(){
 
-    }
-
-    public void spawnTetramino(Tetramino tetramino){
-        for(int x = 0; x < 4; x++){
-            for(int y = 0; y < 4; y++){
-                well[y][x] = tetramino.value[x][y];
-            }
-        }
     }
 
 
@@ -91,32 +87,20 @@ public class Game {
         float left_edge = w_width/2 - Block.size * 10 / 2;
         float top_edge = 100;
 
-        glEnable(GL_TEXTURE_2D);
-
         for(int x = 0; x < 10; x++){
             for(int y = 0; y < 16; y++){
-                if(well[x][y] != null && well[x][y].getTex() != null){
+                if(well[x][y] != null){
                     Block b = well[x][y];
-                    b.getTex().bind();
-
-                    if(b.isShadow())
-                        glColor4f(.5f,.5f,.5f, 1);
-                    else
-                        glColor4f(1,1,1, 1);
-
-                    glBegin(GL_QUADS);
-                    glTexCoord2f(0,1);
-                    glVertex2f(left_edge + x * Block.size, top_edge + y * Block.size);
-                    glTexCoord2f(1,1);
-                    glVertex2f(left_edge + x * Block.size + Block.size, top_edge + y * Block.size);
-                    glTexCoord2f(1,0);
-                    glVertex2f(left_edge + x * Block.size + Block.size, top_edge + y * Block.size + Block.size);
-                    glTexCoord2f(0,0);
-                    glVertex2f(left_edge + x * Block.size, top_edge + y * Block.size + Block.size);
-                    glEnd();
+                    b.render(x, y, left_edge, top_edge);
                 }
             }
         }
+    }
+
+    private void renderTetramino(){
+        float left_edge = w_width/2 - Block.size * 10 / 2;
+        float top_edge = 100;
+        currentTetramino.render(currentTetraminoX, currentTetraminoY, left_edge, top_edge);
     }
 
     public void render(){
@@ -124,20 +108,12 @@ public class Game {
         renderBackground();
         renderField();
         renderWell();
+        renderTetramino();
     }
 
     public Game(){
         w_height = Main.window_height;
         w_width = Main.window_width;
-
-        Tetraminos.init();
-
-        well = new Block[10][16];
-
-        spawnTetramino(Tetraminos.I);
-
-//        well[0][0] = Blocks.I;
-//        well[0][1] = Blocks.I;
 
 //        well[0][0] = Blocks.I;
 //        well[0][1] = Blocks.I;
@@ -149,7 +125,9 @@ public class Game {
 //        well[4][0] = Blocks.I_shadow;
 //        well[5][0] = Blocks.I_shadow;
 
-
+        currentTetramino = new Tetramino(BlockType.I);
+        currentTetraminoX = 5;
+        currentTetraminoY = 0;
 
         background = Texture.loadTexture("res/select00.jpg");
     }
