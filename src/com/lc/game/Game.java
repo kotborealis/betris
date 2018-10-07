@@ -18,7 +18,7 @@ public class Game {
     private Tetramino currentTetramino;
     private float currentTetraminoX;
     private float currentTetraminoY;
-    private Block well[][] = new Block[10][16];
+    private Block well[][] = new Block[10][24];
 
     public void update(){
 
@@ -64,20 +64,20 @@ public class Game {
     private void renderField(){
         glColor3f(1, 1, 1);
         glBegin(GL_LINE_STRIP);
-            glVertex2f(w_width/2 - Block.size * 10 / 2, 100);
+            glVertex2f(w_width/2 - Block.size * 10 / 2, 0);
             glVertex2f(w_width/2 - Block.size * 10 / 2, 500);
             glVertex2f(w_width/2 + Block.size * 10 / 2, 500);
-            glVertex2f(w_width/2 + Block.size * 10 / 2, 100);
+            glVertex2f(w_width/2 + Block.size * 10 / 2, 0);
         glEnd();
 
         glColor3f(137/255.f, 42/255.f, 118/225.f);
         glBegin(GL_LINES);
             for(int i = 1; i < 16; i++){
-                glVertex2f(w_width/2 - Block.size * 10 / 2, 100 + i * Block.size);
-                glVertex2f(w_width/2 + Block.size * 10 / 2, 100 + i * Block.size);
+                glVertex2f(w_width/2 - Block.size * 10 / 2, i * Block.size);
+                glVertex2f(w_width/2 + Block.size * 10 / 2, i * Block.size);
             }
             for(int j = 1; j < 10; j++){
-                glVertex2f(w_width/2 - Block.size * 10 / 2 + j * Block.size, 100);
+                glVertex2f(w_width/2 - Block.size * 10 / 2 + j * Block.size, 0);
                 glVertex2f(w_width/2 - Block.size * 10 / 2 + j * Block.size, 500);
             }
         glEnd();
@@ -85,7 +85,7 @@ public class Game {
 
     private void renderWell(){
         float left_edge = w_width/2 - Block.size * 10 / 2;
-        float top_edge = 100;
+        float top_edge = -50;
 
         for(int x = 0; x < 10; x++){
             for(int y = 0; y < 16; y++){
@@ -99,7 +99,7 @@ public class Game {
 
     private void renderTetramino(){
         float left_edge = w_width/2 - Block.size * 10 / 2;
-        float top_edge = 100;
+        float top_edge = -50;
         currentTetramino.render(currentTetraminoX, currentTetraminoY, left_edge, top_edge);
     }
 
@@ -125,9 +125,9 @@ public class Game {
 //        well[4][0] = Blocks.I_shadow;
 //        well[5][0] = Blocks.I_shadow;
 
-        currentTetramino = new Tetramino(BlockType.I);
+        currentTetramino = new Tetramino(BlockType.T);
         currentTetraminoX = 5;
-        currentTetraminoY = 0;
+        currentTetraminoY = 2;
 
         background = Texture.loadTexture("res/select00.jpg");
     }
