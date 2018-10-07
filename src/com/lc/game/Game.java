@@ -86,7 +86,7 @@ public class Game {
 
         for(int x = 0; x < 10; x++){
             for(int y = 0; y < 16; y++){
-                if(well[x][y] != null){
+                if(well[x][y] != null && well[x][y].getTex() != null){
                     Block b = well[x][y];
                     b.getTex().bind();
 
@@ -129,7 +129,7 @@ public class Game {
         well[0][3] = Blocks.I;
         well[1][0] = Blocks.I_shadow;
         well[2][0] = Blocks.I_shadow;
-        well[3][0] = Blocks.I_shadow;
+        well[3][0] = Blocks.Empty;
         well[4][0] = Blocks.I_shadow;
         well[5][0] = Blocks.I_shadow;
 

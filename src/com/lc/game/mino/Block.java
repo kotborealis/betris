@@ -51,6 +51,7 @@ public class Block {
             case Z: tex = BlockTextures.Z; break;
             case J: tex = BlockTextures.J; break;
             case L: tex = BlockTextures.L; break;
+            case Empty: tex = null; break;
         }
     }
 }

@@ -1,3 +1,3 @@
 package com.lc.game.mino;
 
-public enum BlockType {I, O, T, S, Z, J, L}
+public enum BlockType {I, O, T, S, Z, J, L, Empty}
