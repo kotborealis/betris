@@ -5,18 +5,18 @@ import com.lc.game.mino.BlockType;
 import com.lc.game.mino.Blocks;
 
 public class Tetramino {
-    public BlockType type;
+    private BlockType type;
     public Block[][] value;
-    public int n = 0;
+    private int n;
 
     public void render(float x, float y, float left_edge, float top_edge){
         for(int i = 0; i < 4; i++)
             for(int j =0; j < 4; j++){
-                value[j][i].render(x + i, y + j, left_edge, top_edge);
+                value[i][j].render(x + i, y + j, left_edge, top_edge);
             }
     }
 
-    public int minY(){
+    public int minX(){
         int val = 9999;
         for(int x = 0; x < 4; x++)
             for(int y = 0; y < 4; y++)
@@ -25,7 +25,7 @@ public class Tetramino {
         return val;
     }
 
-    public int maxY(){
+    public int maxX(){
         int val = -999;
         for(int x = 0; x < 4; x++)
             for(int y = 0; y < 4; y++)
@@ -34,7 +34,7 @@ public class Tetramino {
         return val;
     }
 
-    public int minX(){
+    public int minY(){
         int val = 9999;
         for(int x = 0; x < 4; x++)
             for(int y = 0; y < 4; y++)
@@ -43,7 +43,7 @@ public class Tetramino {
         return val;
     }
 
-    public int maxX(){
+    public int maxY(){
         int val = -999;
         for(int x = 0; x < 4; x++)
             for(int y = 0; y < 4; y++)

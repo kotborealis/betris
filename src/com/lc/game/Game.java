@@ -43,13 +43,13 @@ public class Game {
             y++;
 
             if(y + cur.maxY() >= 21){
-                for(int i = 0; i < cur.maxX(); i++)
-                    for(int j = 0; j < cur.maxY(); j++){
-                        well[x + i][y + j] = cur.value[i][j];
-                        System.out.println(x+i);
-                        System.out.println(y+j);
+                System.out.println(x);
+                System.out.println(y);
+                for(int i = 0; i < 4; i++)
+                    for(int j = 0; j < 4; j++){
+                        if(cur.value[i][j] != Blocks.E)
+                            well[x+i][y+j] = cur.value[i][j];
                     }
-
 
                 x = 0;
                 y = 2;
@@ -69,16 +69,6 @@ public class Game {
 
         if(x < 0) x = 0;
         if(x + cur.maxX() >= 10) x = x - (x + cur.maxX() - 9);
-    }
-
-    private void syncUpdateRate(float fps, long lastNanos) {
-        long targetNanos = lastNanos + (long) (1_000_000_000.0f / fps) - 1_000_000L;  // subtract 1 ms to skip the last sleep call
-        try {
-            while (System.nanoTime() < targetNanos) {
-                Thread.sleep(1);
-            }
-        }
-        catch (InterruptedException ignore) {}
     }
 
     private void renderProjection(){
@@ -144,7 +134,7 @@ public class Game {
         float top_edge = -50;
 
         for(int x = 0; x < 10; x++){
-            for(int y = 0; y < 16; y++){
+            for(int y = 0; y < 24; y++){
                 if(well[x][y] != null){
                     Block b = well[x][y];
                     b.render(x, y, left_edge, top_edge);
@@ -178,8 +168,6 @@ public class Game {
 //        well[1][0] = Blocks.I_shadow;
 //        well[2][0] = Blocks.I_shadow;
 //        well[3][0] = Blocks.E;
-//        well[4][0] = Blocks.I_shadow;
-//        well[5][0] = Blocks.I_shadow;
 
         cur = new Tetramino(BlockType.T);
         x = 0;
