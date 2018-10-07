@@ -16,8 +16,6 @@ public class Game {
     private float w_height;
 
     private Tetramino cur;
-    private int x;
-    private int y;
     private int queuedMove = 0;
     private int queuedRotateRight = 0;
     private int queuedRotateLeft = 0;
@@ -40,21 +38,8 @@ public class Game {
         long targetNanos = lastNanos  + (long) (1_000_000_000.0f / drop_ps) - 1_000_000L;
         if(System.nanoTime() >= targetNanos){
             lastNanos = System.nanoTime();
-            y++;
-
-            if(y + cur.maxY() >= 21){
-                System.out.println(x);
-                System.out.println(y);
-                for(int i = 0; i < 4; i++)
-                    for(int j = 0; j < 4; j++){
-                        if(cur.value[i][j] != Blocks.E)
-                            well[x+i][y+j] = cur.value[i][j];
-                    }
-
-                x = 0;
-                y = 2;
-                cur = new Tetramino(BlockType.T);
-            }
+            if(cur.moveDown())
+                cur = new Tetramino(well, BlockType.T);
         }
 
         for(int i = 0; i < queuedRotateLeft; i++)
@@ -64,11 +49,13 @@ public class Game {
             cur.rotateRight();
         queuedRotateRight = 0;
 
-        x += queuedMove;
+        if(queuedMove > 0)
+            for(int i = 0; i < queuedMove; i++)
+                cur.moveRight();
+        if(queuedMove < 0)
+            for(int i = 0; i > queuedMove; i--)
+                cur.moveLeft();
         queuedMove = 0;
-
-        if(x < 0) x = 0;
-        if(x + cur.maxX() >= 10) x = x - (x + cur.maxX() - 9);
     }
 
     private void renderProjection(){
@@ -146,7 +133,7 @@ public class Game {
     private void renderTetramino(){
         float left_edge = w_width/2 - Block.size * 10 / 2;
         float top_edge = -50;
-        cur.render(x, y, left_edge, top_edge);
+        cur.render(left_edge, top_edge);
     }
 
     public void render(){
@@ -169,9 +156,7 @@ public class Game {
 //        well[2][0] = Blocks.I_shadow;
 //        well[3][0] = Blocks.E;
 
-        cur = new Tetramino(BlockType.T);
-        x = 0;
-        y = 2;
+        cur = new Tetramino(well, BlockType.T);
 
         background = Texture.loadTexture("res/select00.jpg");
     }

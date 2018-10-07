@@ -9,7 +9,12 @@ public class Tetramino {
     public Block[][] value;
     private int n;
 
-    public void render(float x, float y, float left_edge, float top_edge){
+    Block[][] well;
+
+    int x = 0;
+    int y = 2;
+
+    public void render(float left_edge, float top_edge){
         for(int i = 0; i < 4; i++)
             for(int j =0; j < 4; j++){
                 value[i][j].render(x + i, y + j, left_edge, top_edge);
@@ -62,8 +67,42 @@ public class Tetramino {
         value = Tetraminos.tetraminos[n%4][type.ordinal()];
     }
 
-    public Tetramino(BlockType type){
+    public void moveRight(){
+        x++;
+        afterMove();
+    }
+
+    public void moveLeft(){
+        x--;
+        afterMove();
+    }
+
+    public boolean moveDown(){
+        boolean r = false;
+        y++;
+
+        if(y + maxY() >= 21){
+            for(int i = 0; i < 4; i++)
+                for(int j = 0; j < 4; j++){
+                    if(value[i][j] != Blocks.E)
+                        well[x+i][y+j] = value[i][j];
+                }
+            r = true;
+        }
+
+        afterMove();
+        return r;
+    }
+
+    public void afterMove(){
+        if(x + minX() < 0) x = 0;
+        if(x + maxX() >= 10) x = x - (x + maxX() - 9);
+    }
+
+    public Tetramino(Block[][] well, BlockType type){
         if(!Tetraminos.init_done) Tetraminos.init();
+
+        this.well = well;
 
         this.type = type;
 
