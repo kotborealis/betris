@@ -2,10 +2,8 @@ package com.lc.game;
 
 import com.lc.Main;
 import com.lc.game.mino.Block;
-import com.lc.game.mino.block_type;
+import com.lc.game.mino.BlockType;
 import com.lc.texture.Texture;
-
-import java.util.List;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -20,13 +18,13 @@ public class Game {
     }
 
 
-    void renderProjection(){
+    private void renderProjection(){
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
         glOrtho(0.0f, w_width, w_height, 0.0f, 0.0f, 1.0f);
     }
 
-    void renderBackground(){
+    private void renderBackground(){
         glMatrixMode(GL_PROJECTION);
         glPushMatrix();
         glLoadIdentity();
@@ -56,7 +54,7 @@ public class Game {
         glMatrixMode(GL_MODELVIEW);
     }
 
-    void renderField(){
+    private void renderField(){
         glColor3f(1, 1, 1);
         glBegin(GL_LINE_STRIP);
             glVertex2f(w_width/2 - Block.size * 10 / 2, 100);
@@ -78,7 +76,7 @@ public class Game {
         glEnd();
     }
 
-    void renderWell(){
+    private void renderWell(){
         for(int x = 0; x < 10; x++){
             for(int y = 0; y < 16; y++){
                 if(well[x][y] != null){
@@ -100,14 +98,20 @@ public class Game {
         w_width = Main.window_width;
 
         well = new Block[10][16];
-        well[0][0] = new Block(block_type.Placeholder, 0, 0);
-        well[0][1] = new Block(block_type.I, 25, 0);
-        well[0][2] = new Block(block_type.J, 50, 0);
-        well[0][3] = new Block(block_type.L, 75, 0);
-        well[0][4] = new Block(block_type.Z, 100, 0);
-        well[0][5] = new Block(block_type.S, 125, 0);
-        well[0][6] = new Block(block_type.O, 150, 0);
-        well[0][7] = new Block(block_type.T, 175, 0);
+        well[0][1] = new Block(BlockType.I, 25, 0, false);
+        well[0][2] = new Block(BlockType.J, 50, 0, false);
+        well[0][3] = new Block(BlockType.L, 75, 0, false);
+        well[0][4] = new Block(BlockType.Z, 100, 0, false);
+        well[0][5] = new Block(BlockType.S, 125, 0, false);
+        well[0][6] = new Block(BlockType.O, 150, 0, false);
+        well[0][7] = new Block(BlockType.T, 175, 0, false);
+        well[1][1] = new Block(BlockType.I, 25, 25, true);
+        well[1][2] = new Block(BlockType.J, 50, 25, true);
+        well[1][3] = new Block(BlockType.L, 75, 25, true);
+        well[1][4] = new Block(BlockType.Z, 100, 25, true);
+        well[1][5] = new Block(BlockType.S, 125, 25, true);
+        well[1][6] = new Block(BlockType.O, 150, 25, true);
+        well[1][7] = new Block(BlockType.T, 175, 25, true);
 
         background = Texture.loadTexture("res/select00.jpg");
     }

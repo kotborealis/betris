@@ -9,35 +9,15 @@ public class Block {
 
     private float x;
     private float y;
-    private block_type type;
     private Texture tex;
-
-    private static boolean init_done = false;
-    private static Texture texI;
-    private static Texture texO;
-    private static Texture texT;
-    private static Texture texS;
-    private static Texture texZ;
-    private static Texture texJ;
-    private static Texture texL;
-    private static Texture texPlaceholder;
-
-    static public void init(){
-        texI = Texture.loadTexture("res/b7.png");
-        texO = Texture.loadTexture("res/b5.png");
-        texT = Texture.loadTexture("res/b9.png");
-        texS = Texture.loadTexture("res/b6.png");
-        texZ = Texture.loadTexture("res/b3.png");
-        texJ = Texture.loadTexture("res/b8.png");
-        texL = Texture.loadTexture("res/b4.png");
-        texPlaceholder = Texture.loadTexture("res/placeholder.png");
-        init_done = true;
-    }
+    private boolean shadow;
 
     public void render(){
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        glColor4f(1,1,1, 1);
+        if(shadow)
+            glColor4f(.5f,.5f,.5f, 1);
+        else
+            glColor4f(1,1,1, 1);
+
         tex.bind();
         glEnable(GL_TEXTURE_2D);
         glBegin(GL_QUADS);
@@ -52,22 +32,22 @@ public class Block {
         glEnd();
     }
 
-    public Block(block_type type, float x, float y){
-        if(!init_done) init();
+    public Block(BlockType type, float x, float y, boolean shadow){
+        BlockTextures.init();
 
         this.x = x;
         this.y = y;
-        this.type = type;
+
+        this.shadow = shadow;
 
         switch (type){
-            case I: tex = texI; break;
-            case O: tex = texO; break;
-            case T: tex = texT; break;
-            case S: tex = texS; break;
-            case Z: tex = texZ; break;
-            case J: tex = texJ; break;
-            case L: tex = texL; break;
-            case Placeholder: tex = texPlaceholder; break;
+            case I: tex = BlockTextures.I; break;
+            case O: tex = BlockTextures.O; break;
+            case T: tex = BlockTextures.T; break;
+            case S: tex = BlockTextures.S; break;
+            case Z: tex = BlockTextures.Z; break;
+            case J: tex = BlockTextures.J; break;
+            case L: tex = BlockTextures.L; break;
         }
     }
 }
