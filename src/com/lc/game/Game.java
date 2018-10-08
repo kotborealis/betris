@@ -53,7 +53,10 @@ public class Game {
             cur.rotateRight();
         queuedRotateRight = 0;
         for(int i = 0; i < queuedMoveDown; i++)
-            cur.moveDown();
+            if(cur.moveDown()){
+                spawnTetramino();
+                break;
+            }
         queuedMoveDown = 0;
 
         if(queuedMove > 0)

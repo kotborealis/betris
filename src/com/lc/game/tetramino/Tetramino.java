@@ -6,7 +6,7 @@ import com.lc.game.mino.Blocks;
 
 public class Tetramino {
     private BlockType type;
-    public Block[][] value;
+    private Block[][] value;
     private int n;
 
     private Block[][] well;
@@ -85,17 +85,17 @@ public class Tetramino {
         boolean shouldStop = collision();
 
         if(shouldStop){
-//            for(int i = minX(); i < maxY(); i++)
-//                for(int j = minY(); j < maxX(); j++){
-//                    if(value[i][j] != Blocks.E)
-//                        well[x + minX() + i][y + minY() + j] = value[i][j];
-//                }
+            for(int i = minX(); i <= maxX(); i++)
+                for(int j = minY(); j <= maxY(); j++){
+                    if(value[i][j] != Blocks.E)
+                        well[x + i][y + j] = value[i][j];
+                }
         }
 
         return shouldStop;
     }
 
-    public boolean collision(){
+    private boolean collision(){
         boolean shouldStop = false;
 
         if(x + minX() < 0){
@@ -105,7 +105,7 @@ public class Tetramino {
             x += 10 - (x + maxX()) - 1;
         }
         if(y + maxY() >= well[0].length){
-            y += 21 - (y + maxY());
+            y--;
             shouldStop = true;
         }
 
