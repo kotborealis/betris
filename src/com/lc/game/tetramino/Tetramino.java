@@ -11,6 +11,29 @@ public class Tetramino {
 
     private Block[][] well;
 
+    private int[][][] rightWallKickData = {
+            { { 0, 0 }, { -1, 0 }, { -1, +1 }, { 0, -2 }, { -1, -2 } },
+            { { 0, 0 }, { +1, 0 }, { +1, -1 }, { 0, +2 }, { +1, +2 } },
+            { { 0, 0 }, { +1, 0 }, { +1, +1 }, { 0, -2 }, { +1, -2 } },
+            { { 0, 0 }, { -1, 0 }, { -1, -1 }, { 0, +2 }, { -1, +2 } } };
+    private int[][][] leftWallKickData = {
+            { { 0, 0 }, { +1, 0 }, { +1, +1 }, { 0, -2 }, { +1, -2 } },
+            { { 0, 0 }, { +1, 0 }, { +1, -1 }, { 0, +2 }, { +1, +2 } },
+            { { 0, 0 }, { -1, 0 }, { -1, +1 }, { 0, -2 }, { -1, -2 } },
+            { { 0, 0 }, { -1, 0 }, { -1, -1 }, { 0, +2 }, { -1, +2 } } };
+
+    private final static int[][][] rightWallKickDataI = {
+            { { 0, 0 }, { -2, 0 }, { +1, 0 }, { -2, -1 }, { +1, +2 } },
+            { { 0, 0 }, { -1, 0 }, { +2, 0 }, { -1, +2 }, { +2, -1 } },
+            { { 0, 0 }, { +2, 0 }, { -1, 0 }, { +2, +1 }, { -1, -2 } },
+            { { 0, 0 }, { +1, 0 }, { -2, 0 }, { +1, -2 }, { -2, +1 } } };
+
+    private final static int[][][] leftWallKickDataI = {
+            { { 0, 0 }, { -1, 0 }, { +2, 0 }, { -1, +2 }, { +2, -1 } },
+            { { 0, 0 }, { +2, 0 }, { -1, 0 }, { +2, +1 }, { -1, -2 } },
+            { { 0, 0 }, { +1, 0 }, { -2, 0 }, { +1, -2 }, { -2, +1 } },
+            { { 0, 0 }, { -2, 0 }, { +1, 0 }, { -2, -1 }, { +1, +2 } } };
+
     private int x = 0;
     private int y = 0;
 
@@ -60,13 +83,45 @@ public class Tetramino {
     public void rotateRight(){
         n = (n+1)%4;
         value = Tetraminos.tetraminos[n%4][type.ordinal()];
-        if(checkCollision()) rotateLeft();
+        if(checkCollision()){
+            int wallKickData[][][];
+            if(type == BlockType.I)
+                wallKickData = rightWallKickDataI;
+            else
+                wallKickData = rightWallKickData;
+
+            if(!wallKickTest(wallKickData))
+                rotateLeft();
+        }
     }
 
     public void rotateLeft(){
         n = (n+4-1)%4;
         value = Tetraminos.tetraminos[n%4][type.ordinal()];
-        if(checkCollision()) rotateRight();
+        if(checkCollision()){
+            int wallKickData[][][];
+            if(type == BlockType.I)
+                wallKickData = leftWallKickDataI;
+            else
+                wallKickData = leftWallKickData;
+
+            if(!wallKickTest(wallKickData))
+                rotateRight();
+        }
+    }
+
+    private boolean wallKickTest(int[][][] wallKickData) {
+        boolean success = false;
+        for(int i = 0; i < 5; i++){
+            x += wallKickData[(n+4-1)%4][i][0];
+            y += wallKickData[(n+4-1)%4][i][1];
+
+            if(!checkCollision()){
+                success = true;
+                break;
+            }
+        }
+        return success;
     }
 
     public void moveRight(){
