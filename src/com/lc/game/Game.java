@@ -67,6 +67,24 @@ public class Game {
             for(int i = 0; i > queuedMove; i--)
                 cur.moveLeft();
         queuedMove = 0;
+
+        for(int j = 0; j < well[0].length; j++){
+            int empty = 10;
+            for(int i = 0; i < well.length; i++)
+                if(well[i][j] != Blocks.E)
+                    empty--;
+            if(empty == 0)
+                destroyRow(j);
+        }
+    }
+
+    private void destroyRow(int row){
+        for(int j = row; j > 0; j--) {
+            for (int i = 0; i < well.length; i++)
+                well[i][j] = well[i][j - 1];
+        }
+        for(int i = 0; i < well.length; i++)
+            well[i][0 ] = Blocks.E;
     }
 
     private void spawnTetramino(){
