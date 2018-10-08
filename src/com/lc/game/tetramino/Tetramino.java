@@ -60,29 +60,29 @@ public class Tetramino {
     public void rotateRight(){
         n = (n+1)%4;
         value = Tetraminos.tetraminos[n%4][type.ordinal()];
-        collision();
+        collision(0, 0);
     }
 
     public void rotateLeft(){
         n = (n+4-1)%4;
         value = Tetraminos.tetraminos[n%4][type.ordinal()];
-        collision();
+        collision(0, 0);
     }
 
     public void moveRight(){
         x++;
-        collision();
+        collision(1, 0);
     }
 
     public void moveLeft(){
         x--;
-        collision();
+        collision(-1, 0);
     }
 
     public boolean moveDown(){
         y++;
 
-        boolean shouldStop = collision();
+        boolean shouldStop = collision(0, 1);
 
         if(shouldStop){
             for(int i = minX(); i <= maxX(); i++)
@@ -95,7 +95,7 @@ public class Tetramino {
         return shouldStop;
     }
 
-    private boolean collision(){
+    private boolean collision(float dx, float dy){
         boolean shouldStop = false;
 
         if(x + minX() < 0){
@@ -108,6 +108,17 @@ public class Tetramino {
             y--;
             shouldStop = true;
         }
+
+        for(int i = 0; i < 4; i++)
+            for(int j = 0; j < 4; j++)
+                if(value[i][j] != Blocks.E && (well[x + i][y + j] != Blocks.E)) {
+                    if(dy > 0){
+                        y--;
+                        shouldStop = true;
+                    }
+                    if(dx != 0)
+                        x -= dx;
+                }
 
         return shouldStop ;
     }

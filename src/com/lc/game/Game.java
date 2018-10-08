@@ -32,6 +32,7 @@ public class Game {
             if(key == GLFW_KEY_LEFT) queuedMove--;
             if(key == GLFW_KEY_RIGHT) queuedMove++;
             if(key == GLFW_KEY_DOWN) queuedMoveDown++;
+            if(key == GLFW_KEY_SPACE) queuedMoveDown+=24;
             if(key == GLFW_KEY_Z) queuedRotateLeft++;
             if(key == GLFW_KEY_X) queuedRotateRight++;
         }
@@ -157,6 +158,10 @@ public class Game {
     public Game(){
         w_height = Main.window_height;
         w_width = Main.window_width;
+
+        for(int i = 0; i < well.length; i++)
+            for(int j = 0; j < well[0].length; j++)
+                well[i][j] = Blocks.E;
 
 //        well[0][0] = Blocks.I;
 //        well[0][1] = Blocks.I;
