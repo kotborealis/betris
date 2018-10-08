@@ -1,13 +1,12 @@
 package com.lc;
 
 import com.lc.game.Game;
-import com.lc.texture.Texture;
-import org.lwjgl.*;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
 
 import java.nio.*;
+import java.util.Objects;
 
 import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
@@ -22,7 +21,7 @@ public class Main {
 
     static public int window_width = 800;
     static public int window_height = 600;
-    static Game game;
+    private static Game game;
 
     private void run() {
         init();
@@ -34,7 +33,7 @@ public class Main {
 
         // Terminate GLFW and free the error callback
         glfwTerminate();
-        glfwSetErrorCallback(null).free();
+        Objects.requireNonNull(glfwSetErrorCallback(null)).free();
     }
 
     private void init() {
@@ -68,6 +67,7 @@ public class Main {
 
             // Get the resolution of the primary monitor
             GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+            assert vidmode != null;
 
             // Center the window
             glfwSetWindowPos(

@@ -15,7 +15,7 @@ public class Texture {
     private int width;
     private int height;
 
-    public Texture() {
+    private Texture() {
         id = glGenTextures();
     }
 
@@ -23,7 +23,7 @@ public class Texture {
         glBindTexture(GL_TEXTURE_2D, id);
     }
 
-    public void setParameter(int name, int value) {
+    private void setParameter(int name, int value) {
         glTexParameteri(GL_TEXTURE_2D, name, value);
     }
 
@@ -31,7 +31,7 @@ public class Texture {
         uploadData(GL_RGBA8, width, height, GL_RGBA, data);
     }
 
-    public void uploadData(int internalFormat, int width, int height, int format, ByteBuffer data) {
+    private void uploadData(int internalFormat, int width, int height, int format, ByteBuffer data) {
         glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format, GL_UNSIGNED_BYTE, data);
     }
 
@@ -42,7 +42,7 @@ public class Texture {
     public int getWidth() {
         return width;
     }
-    public void setWidth(int width) {
+    private void setWidth(int width) {
         if (width > 0) {
             this.width = width;
         }
@@ -50,12 +50,12 @@ public class Texture {
     public int getHeight() {
         return height;
     }
-    public void setHeight(int height) {
+    private void setHeight(int height) {
         if (height > 0) {
             this.height = height;
         }
     }
-    public static Texture createTexture(int width, int height, ByteBuffer data) {
+    private static Texture createTexture(int width, int height, ByteBuffer data) {
         Texture texture = new Texture();
         texture.setWidth(width);
         texture.setHeight(height);

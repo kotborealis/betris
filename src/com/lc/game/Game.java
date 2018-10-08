@@ -7,6 +7,8 @@ import com.lc.game.mino.Blocks;
 import com.lc.game.tetramino.Tetramino;
 import com.lc.texture.Texture;
 
+import java.util.Random;
+
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 
@@ -39,7 +41,7 @@ public class Game {
         if(System.nanoTime() >= targetNanos){
             lastNanos = System.nanoTime();
             if(cur.moveDown())
-                cur = new Tetramino(well, BlockType.T);
+                spawnTetramino();
         }
 
         for(int i = 0; i < queuedRotateLeft; i++)
@@ -56,6 +58,11 @@ public class Game {
             for(int i = 0; i > queuedMove; i--)
                 cur.moveLeft();
         queuedMove = 0;
+    }
+
+    private void spawnTetramino(){
+        BlockType type = BlockType.values()[new Random().nextInt(BlockType.values().length - 1)];
+        cur = new Tetramino(well, type);
     }
 
     private void renderProjection(){
@@ -156,7 +163,7 @@ public class Game {
 //        well[2][0] = Blocks.I_shadow;
 //        well[3][0] = Blocks.E;
 
-        cur = new Tetramino(well, BlockType.T);
+        spawnTetramino();
 
         background = Texture.loadTexture("res/select00.jpg");
     }
