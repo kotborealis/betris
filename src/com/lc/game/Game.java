@@ -52,10 +52,10 @@ public class Game {
         }
 
         for(int i = 0; i < queuedRotateLeft; i++)
-            cur.rotateLeft();
+            cur.rotateLeft(true);
         queuedRotateLeft = 0;
         for(int i = 0; i < queuedRotateRight; i++)
-            cur.rotateRight();
+            cur.rotateRight(true);
         queuedRotateRight = 0;
         for(int i = 0; i < queuedMoveDown; i++)
             if(cur.moveDown()){

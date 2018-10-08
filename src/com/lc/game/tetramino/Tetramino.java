@@ -80,10 +80,11 @@ public class Tetramino {
         return val;
     }
 
-    public void rotateRight(){
+    public void rotateRight(boolean checkCollision){
         n = (n+1)%4;
         value = Tetraminos.tetraminos[n%4][type.ordinal()];
-        if(checkCollision()){
+
+        if(checkCollision && checkCollision()){
             int wallKickData[][][];
             if(type == BlockType.I)
                 wallKickData = rightWallKickDataI;
@@ -91,14 +92,14 @@ public class Tetramino {
                 wallKickData = rightWallKickData;
 
             if(!wallKickTest(wallKickData))
-                rotateLeft();
+                rotateLeft(false);
         }
     }
 
-    public void rotateLeft(){
+    public void rotateLeft(boolean checkCollision){
         n = (n+4-1)%4;
         value = Tetraminos.tetraminos[n%4][type.ordinal()];
-        if(checkCollision()){
+        if(checkCollision && checkCollision()){
             int wallKickData[][][];
             if(type == BlockType.I)
                 wallKickData = leftWallKickDataI;
@@ -106,7 +107,7 @@ public class Tetramino {
                 wallKickData = leftWallKickData;
 
             if(!wallKickTest(wallKickData))
-                rotateRight();
+                rotateRight(false);
         }
     }
 
@@ -119,6 +120,10 @@ public class Tetramino {
             if(!checkCollision()){
                 success = true;
                 break;
+            }
+            else{
+                x -= wallKickData[(n+4-1)%4][i][0];
+                y -= wallKickData[(n+4-1)%4][i][1];
             }
         }
         return success;
