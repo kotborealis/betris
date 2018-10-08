@@ -7,6 +7,8 @@ import com.lc.game.mino.Blocks;
 import com.lc.game.tetramino.Tetramino;
 import com.lc.texture.Texture;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Random;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -22,6 +24,8 @@ public class Game {
     private int queuedMoveDown = 0;
     private int queuedRotateRight = 0;
     private int queuedRotateLeft = 0;
+
+    private ArrayList<BlockType> bag;
 
     private Block well[][] = new Block[10][24];
 
@@ -70,8 +74,8 @@ public class Game {
 
         for(int j = 0; j < well[0].length; j++){
             int empty = 10;
-            for(int i = 0; i < well.length; i++)
-                if(well[i][j] != Blocks.E)
+            for (Block[] aWell : well)
+                if (aWell[j] != Blocks.E)
                     empty--;
             if(empty == 0)
                 destroyRow(j);
@@ -88,7 +92,21 @@ public class Game {
     }
 
     private void spawnTetramino(){
-        BlockType type = BlockType.values()[new Random().nextInt(BlockType.values().length - 1)];
+        if(bag.size() <= 7){
+            ArrayList<BlockType> new_bag = new ArrayList<>() {{
+                add(BlockType.I);
+                add(BlockType.O);
+                add(BlockType.T);
+                add(BlockType.S);
+                add(BlockType.Z);
+                add(BlockType.J);
+                add(BlockType.L);
+            }};
+            Collections.shuffle(new_bag);
+            bag.addAll(new_bag);
+        }
+        BlockType type = bag.get(0);
+        bag.remove(0);
         cur = new Tetramino(well, type);
     }
 
@@ -176,6 +194,8 @@ public class Game {
     public Game(){
         w_height = Main.window_height;
         w_width = Main.window_width;
+
+        bag = new ArrayList<>();
 
         for(int i = 0; i < well.length; i++)
             for(int j = 0; j < well[0].length; j++)
