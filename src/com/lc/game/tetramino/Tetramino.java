@@ -39,7 +39,7 @@ public class Tetramino {
         return val;
     }
 
-    public int minY(){
+    private int minY(){
         int val = 9999;
         for(int x = 0; x < 4; x++)
             for(int y = 0; y < 4; y++)
