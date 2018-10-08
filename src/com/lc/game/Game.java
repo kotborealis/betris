@@ -19,6 +19,7 @@ public class Game {
 
     private Tetramino cur;
     private int queuedMove = 0;
+    private int queuedMoveDown = 0;
     private int queuedRotateRight = 0;
     private int queuedRotateLeft = 0;
 
@@ -29,7 +30,8 @@ public class Game {
     public void handleKey(int key, int action) {
         if(action == GLFW_PRESS || action == GLFW_REPEAT){
             if(key == GLFW_KEY_LEFT) queuedMove--;
-            else if(key == GLFW_KEY_RIGHT) queuedMove++;
+            if(key == GLFW_KEY_RIGHT) queuedMove++;
+            if(key == GLFW_KEY_DOWN) queuedMoveDown++;
             if(key == GLFW_KEY_Z) queuedRotateLeft++;
             if(key == GLFW_KEY_X) queuedRotateRight++;
         }
@@ -50,6 +52,9 @@ public class Game {
         for(int i = 0; i < queuedRotateRight; i++)
             cur.rotateRight();
         queuedRotateRight = 0;
+        for(int i = 0; i < queuedMoveDown; i++)
+            cur.moveDown();
+        queuedMoveDown = 0;
 
         if(queuedMove > 0)
             for(int i = 0; i < queuedMove; i++)
@@ -124,23 +129,18 @@ public class Game {
     }
 
     private void renderWell(){
-        float left_edge = w_width/2 - Block.size * 10 / 2;
-        float top_edge = -50;
-
         for(int x = 0; x < 10; x++){
             for(int y = 0; y < 24; y++){
                 if(well[x][y] != null){
                     Block b = well[x][y];
-                    b.render(x, y, left_edge, top_edge);
+                    b.render(x, y);
                 }
             }
         }
     }
 
     private void renderTetramino(){
-        float left_edge = w_width/2 - Block.size * 10 / 2;
-        float top_edge = -50;
-        cur.render(left_edge, top_edge);
+        cur.render();
     }
 
     public void render(){
@@ -162,6 +162,7 @@ public class Game {
 //        well[1][0] = Blocks.I_shadow;
 //        well[2][0] = Blocks.I_shadow;
 //        well[3][0] = Blocks.E;
+
 
         spawnTetramino();
 

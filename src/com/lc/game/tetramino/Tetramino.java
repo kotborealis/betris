@@ -9,19 +9,19 @@ public class Tetramino {
     public Block[][] value;
     private int n;
 
-    Block[][] well;
+    private Block[][] well;
 
-    int x = 0;
-    int y = 2;
+    private int x = 0;
+    private int y = 0;
 
-    public void render(float left_edge, float top_edge){
+    public void render(){
         for(int i = 0; i < 4; i++)
-            for(int j =0; j < 4; j++){
-                value[i][j].render(x + i, y + j, left_edge, top_edge);
+            for(int j = 0; j < 4; j++){
+                value[i][j].render(x + i, y + j);
             }
     }
 
-    public int minX(){
+    private int minX(){
         int val = 9999;
         for(int x = 0; x < 4; x++)
             for(int y = 0; y < 4; y++)
@@ -30,7 +30,7 @@ public class Tetramino {
         return val;
     }
 
-    public int maxX(){
+    private int maxX(){
         int val = -999;
         for(int x = 0; x < 4; x++)
             for(int y = 0; y < 4; y++)
@@ -48,7 +48,7 @@ public class Tetramino {
         return val;
     }
 
-    public int maxY(){
+    private int maxY(){
         int val = -999;
         for(int x = 0; x < 4; x++)
             for(int y = 0; y < 4; y++)
@@ -60,43 +60,56 @@ public class Tetramino {
     public void rotateRight(){
         n = (n+1)%4;
         value = Tetraminos.tetraminos[n%4][type.ordinal()];
+        collision();
     }
 
     public void rotateLeft(){
         n = (n+4-1)%4;
         value = Tetraminos.tetraminos[n%4][type.ordinal()];
+        collision();
     }
 
     public void moveRight(){
         x++;
-        afterMove();
+        collision();
     }
 
     public void moveLeft(){
         x--;
-        afterMove();
+        collision();
     }
 
     public boolean moveDown(){
-        boolean r = false;
         y++;
 
-        if(y + maxY() >= 21){
-            for(int i = 0; i < 4; i++)
-                for(int j = 0; j < 4; j++){
-                    if(value[i][j] != Blocks.E)
-                        well[x+i][y+j] = value[i][j];
-                }
-            r = true;
+        boolean shouldStop = collision();
+
+        if(shouldStop){
+//            for(int i = minX(); i < maxY(); i++)
+//                for(int j = minY(); j < maxX(); j++){
+//                    if(value[i][j] != Blocks.E)
+//                        well[x + minX() + i][y + minY() + j] = value[i][j];
+//                }
         }
 
-        afterMove();
-        return r;
+        return shouldStop;
     }
 
-    public void afterMove(){
-        if(x + minX() < 0) x = 0;
-        if(x + maxX() >= 10) x = x - (x + maxX() - 9);
+    public boolean collision(){
+        boolean shouldStop = false;
+
+        if(x + minX() < 0){
+            x -= x + minX();
+        }
+        if(x + maxX() >= well.length){
+            x += 10 - (x + maxX()) - 1;
+        }
+        if(y + maxY() >= well[0].length){
+            y += 21 - (y + maxY());
+            shouldStop = true;
+        }
+
+        return shouldStop ;
     }
 
     public Tetramino(Block[][] well, BlockType type){

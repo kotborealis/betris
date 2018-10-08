@@ -8,8 +8,11 @@ public class Block {
     public static final float size = 25;
     private Texture tex;
 
-    public void render(float x, float y, float left_edge, float top_edge){
+    public void render(float x, float y){
         if(tex == null) return;
+
+        float top_edge = -100;
+        float left_edge = 275;
 
         tex.bind();
 
