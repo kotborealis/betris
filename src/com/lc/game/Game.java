@@ -14,6 +14,10 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 
 public class Game {
+    @SuppressWarnings("FieldCanBeLocal")
+    private float drop_ratio = 2.5f;
+    private long lastNanos = System.nanoTime();
+
     private Texture background;
     private float w_width;
     private float w_height;
@@ -28,8 +32,6 @@ public class Game {
 
     private Block well[][] = new Block[10][24];
 
-    private long lastNanos = System.nanoTime();
-
     public Game() {
         w_height = Main.window_height;
         w_width = Main.window_width;
@@ -39,15 +41,6 @@ public class Game {
         for (int i = 0; i < well.length; i++)
             for (int j = 0; j < well[0].length; j++)
                 well[i][j] = Blocks.E;
-
-//        well[0][0] = Blocks.I;
-//        well[0][1] = Blocks.I;
-//        well[0][2] = Blocks.I;
-//        well[0][3] = Blocks.I;
-//        well[1][0] = Blocks.I_shadow;
-//        well[2][0] = Blocks.I_shadow;
-//        well[3][0] = Blocks.E;
-
 
         spawnTetramino();
 
@@ -66,8 +59,7 @@ public class Game {
     }
 
     public void update() {
-        float drop_ps = 2.5f;
-        long targetNanos = lastNanos + (long) (1_000_000_000.0f / drop_ps) - 1_000_000L;
+        long targetNanos = lastNanos + (long) (1_000_000_000.0f / drop_ratio) - 1_000_000L;
         if (System.nanoTime() >= targetNanos) {
             lastNanos = System.nanoTime();
             if (cur.moveDown())
