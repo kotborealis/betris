@@ -93,7 +93,7 @@ public class Game {
 
     private void spawnTetramino(){
         if(bag.size() <= 7){
-            ArrayList<BlockType> new_bag = new ArrayList<>() {{
+            ArrayList<BlockType> new_bag = new ArrayList<BlockType>() {{
                 add(BlockType.I);
                 add(BlockType.O);
                 add(BlockType.T);
