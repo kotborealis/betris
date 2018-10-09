@@ -1,27 +1,31 @@
 package com.lc;
 
 import com.lc.game.Game;
-import org.lwjgl.glfw.*;
-import org.lwjgl.opengl.*;
-import org.lwjgl.system.*;
+import org.lwjgl.glfw.GLFWErrorCallback;
+import org.lwjgl.glfw.GLFWVidMode;
+import org.lwjgl.opengl.GL;
+import org.lwjgl.system.MemoryStack;
 
-import java.nio.*;
+import java.nio.IntBuffer;
 import java.util.Objects;
 
-import static org.lwjgl.glfw.Callbacks.*;
+import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.system.MemoryStack.*;
-import static org.lwjgl.system.MemoryUtil.*;
+import static org.lwjgl.system.MemoryStack.stackPush;
+import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class Main {
-
-    // The window handle
-    private long window;
 
     static public int window_width = 800;
     static public int window_height = 600;
     private static Game game;
+    // The window handle
+    private long window;
+
+    public static void main(String[] args) {
+        new Main().run();
+    }
 
     private void run() {
         init();
@@ -39,7 +43,7 @@ public class Main {
     private void init() {
         GLFWErrorCallback.createPrint(System.err).set();
 
-        if ( !glfwInit() )
+        if (!glfwInit())
             throw new IllegalStateException("Unable to initialize GLFW");
 
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // the window will NOT stay hidden after creation
@@ -47,18 +51,18 @@ public class Main {
 
         // Create the window
         window = glfwCreateWindow(window_width, window_height, "Tetris", NULL, NULL);
-        if ( window == NULL )
+        if (window == NULL)
             throw new RuntimeException("Failed to create the GLFW window");
 
         // Setup a key callback. It will be called every time a key is pressed, repeated or released.
         glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
-            if(game != null) game.handleKey(key, action);
-            if(key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE)
+            if (game != null) game.handleKey(key, action);
+            if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE)
                 glfwSetWindowShouldClose(window, true);
         });
 
         // Get the thread stack and push a new frame
-        try ( MemoryStack stack = stackPush() ) {
+        try (MemoryStack stack = stackPush()) {
             IntBuffer pWidth = stack.mallocInt(1); // int*
             IntBuffer pHeight = stack.mallocInt(1); // int*
 
@@ -98,7 +102,7 @@ public class Main {
 
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
-        while ( !glfwWindowShouldClose(window) ) {
+        while (!glfwWindowShouldClose(window)) {
             glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -110,10 +114,6 @@ public class Main {
             // invoked during this call.
             glfwPollEvents();
         }
-    }
-
-    public static void main(String[] args) {
-        new Main().run();
     }
 
 }

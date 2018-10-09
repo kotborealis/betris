@@ -1,8 +1,9 @@
 package com.lc.texture;
 
+import org.lwjgl.system.MemoryStack;
+
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
-import org.lwjgl.system.MemoryStack;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL13.GL_CLAMP_TO_BORDER;
@@ -19,42 +20,6 @@ public class Texture {
         id = glGenTextures();
     }
 
-    public void bind() {
-        glBindTexture(GL_TEXTURE_2D, id);
-    }
-
-    private void setParameter(int name, int value) {
-        glTexParameteri(GL_TEXTURE_2D, name, value);
-    }
-
-    public void uploadData(int width, int height, ByteBuffer data) {
-        uploadData(GL_RGBA8, width, height, GL_RGBA, data);
-    }
-
-    private void uploadData(int internalFormat, int width, int height, int format, ByteBuffer data) {
-        glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format, GL_UNSIGNED_BYTE, data);
-    }
-
-    public void delete() {
-        glDeleteTextures(id);
-    }
-
-    public int getWidth() {
-        return width;
-    }
-    private void setWidth(int width) {
-        if (width > 0) {
-            this.width = width;
-        }
-    }
-    public int getHeight() {
-        return height;
-    }
-    private void setHeight(int height) {
-        if (height > 0) {
-            this.height = height;
-        }
-    }
     private static Texture createTexture(int width, int height, ByteBuffer data) {
         Texture texture = new Texture();
         texture.setWidth(width);
@@ -95,6 +60,46 @@ public class Texture {
         }
 
         return createTexture(width, height, image);
+    }
+
+    public void bind() {
+        glBindTexture(GL_TEXTURE_2D, id);
+    }
+
+    private void setParameter(int name, int value) {
+        glTexParameteri(GL_TEXTURE_2D, name, value);
+    }
+
+    public void uploadData(int width, int height, ByteBuffer data) {
+        uploadData(GL_RGBA8, width, height, GL_RGBA, data);
+    }
+
+    private void uploadData(int internalFormat, int width, int height, int format, ByteBuffer data) {
+        glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+    }
+
+    public void delete() {
+        glDeleteTextures(id);
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    private void setWidth(int width) {
+        if (width > 0) {
+            this.width = width;
+        }
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    private void setHeight(int height) {
+        if (height > 0) {
+            this.height = height;
+        }
     }
 
 }

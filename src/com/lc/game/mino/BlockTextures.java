@@ -3,7 +3,6 @@ package com.lc.game.mino;
 import com.lc.texture.Texture;
 
 class BlockTextures {
-    private static boolean init_done = false;
     static Texture I;
     static Texture O;
     static Texture T;
@@ -11,9 +10,10 @@ class BlockTextures {
     static Texture Z;
     static Texture J;
     static Texture L;
+    private static boolean init_done = false;
 
-    static void init(){
-        if(init_done) return;
+    static void init() {
+        if (init_done) return;
         I = Texture.loadTexture("res/block/I.png");
         O = Texture.loadTexture("res/block/O.png");
         T = Texture.loadTexture("res/block/T.png");

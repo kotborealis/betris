@@ -1,7 +1,5 @@
 package com.lc.game.mino;
 
-import com.lc.game.mino.BlockType;
-
 public class Blocks {
     public static Block I = new Block(BlockType.I, false);
     public static Block O = new Block(BlockType.O, false);
