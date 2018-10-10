@@ -7,12 +7,9 @@ import static org.lwjgl.opengl.GL11.*;
 public class Block {
     public static final float size = 25;
     private Texture tex;
-    private boolean shadow;
 
-    Block(BlockType type, boolean shadow) {
+    Block(BlockType type) {
         BlockTextures.init();
-
-        this.shadow = shadow;
 
         switch (type) {
             case I:
@@ -42,7 +39,7 @@ public class Block {
         }
     }
 
-    public void render(float x, float y) {
+    public void render(float x, float y, boolean shadow) {
         if (tex == null) return;
 
         float top_edge = -100;
@@ -66,5 +63,9 @@ public class Block {
         glTexCoord2f(0, 0);
         glVertex2f(left_edge + x * Block.size, top_edge + y * Block.size + Block.size);
         glEnd();
+    }
+
+    public void render(float x, float y){
+        render(x, y, false);
     }
 }

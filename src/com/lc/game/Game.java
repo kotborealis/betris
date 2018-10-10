@@ -141,6 +141,8 @@ public class Game {
 
         background.bind();
 
+        glColor3f(1.f, 1.f, 1.f);
+
         glEnable(GL_TEXTURE_2D);
         glBegin(GL_QUADS);
         glTexCoord2f(0, 0);

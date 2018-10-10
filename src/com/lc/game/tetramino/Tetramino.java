@@ -44,6 +44,17 @@ public class Tetramino {
     }
 
     public void render() {
+        int old_y = y;
+        int shadow_y = 0;
+        while(!checkCollision()) y++;
+        shadow_y = y - 1;
+        y = old_y;
+
+        for (int i = 0; i < 4; i++)
+            for (int j = 0; j < 4; j++) {
+                value[i][j].render(x + i, shadow_y + j, true);
+            }
+
         for (int i = 0; i < 4; i++)
             for (int j = 0; j < 4; j++) {
                 value[i][j].render(x + i, y + j);
