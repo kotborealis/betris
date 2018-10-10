@@ -1,4 +1,4 @@
-package com.lc.texture;
+package com.lc;
 
 import org.lwjgl.system.MemoryStack;
 
@@ -68,10 +68,6 @@ public class Texture {
 
     private void setParameter(int name, int value) {
         glTexParameteri(GL_TEXTURE_2D, name, value);
-    }
-
-    public void uploadData(int width, int height, ByteBuffer data) {
-        uploadData(GL_RGBA8, width, height, GL_RGBA, data);
     }
 
     private void uploadData(int internalFormat, int width, int height, int format, ByteBuffer data) {

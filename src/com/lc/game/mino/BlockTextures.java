@@ -1,6 +1,6 @@
 package com.lc.game.mino;
 
-import com.lc.texture.Texture;
+import com.lc.Texture;
 
 class BlockTextures {
     static Texture I;

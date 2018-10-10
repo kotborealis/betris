@@ -5,7 +5,7 @@ import com.lc.game.mino.Block;
 import com.lc.game.mino.BlockType;
 import com.lc.game.mino.Blocks;
 import com.lc.game.tetramino.Tetramino;
-import com.lc.texture.Texture;
+import com.lc.Texture;
 
 import java.util.ArrayList;
 import java.util.Collections;
