@@ -56,7 +56,7 @@ public class Game {
             if (key == GLFW_KEY_DOWN) queuedMoveDown++;
             if (key == GLFW_KEY_SPACE) queuedMoveDown += 24;
             if (key == GLFW_KEY_Z) queuedRotateLeft++;
-            if (key == GLFW_KEY_X) queuedRotateRight++;
+            if (key == GLFW_KEY_X || key == GLFW_KEY_UP) queuedRotateRight++;
             if (key == GLFW_KEY_C) {
                 if (stashedOnThisTurn) return;
                 stashedOnThisTurn = true;
