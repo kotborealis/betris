@@ -29,8 +29,8 @@ public class Tetramino {
             {{0, 0}, {+1, 0}, {+1, -1}, {0, +2}, {+1, +2}},
             {{0, 0}, {-1, 0}, {-1, +1}, {0, -2}, {-1, -2}},
             {{0, 0}, {-1, 0}, {-1, -1}, {0, +2}, {-1, +2}}};
-    private int x = 0;
-    private int y = 0;
+    public int x = 0;
+    public int y = 0;
 
     public Tetramino(Block[][] well, BlockType type) {
         if (!Tetraminos.init_done) Tetraminos.init();
@@ -44,8 +44,15 @@ public class Tetramino {
     }
 
     public void render() {
+        for (int i = 0; i < 4; i++)
+            for (int j = 0; j < 4; j++) {
+                value[i][j].render(x + i, y + j);
+            }
+    }
+
+    public void renderShadow(){
         int old_y = y;
-        int shadow_y = 0;
+        int shadow_y;
         while(!checkCollision()) y++;
         shadow_y = y - 1;
         y = old_y;
@@ -53,11 +60,6 @@ public class Tetramino {
         for (int i = 0; i < 4; i++)
             for (int j = 0; j < 4; j++) {
                 value[i][j].render(x + i, shadow_y + j, true);
-            }
-
-        for (int i = 0; i < 4; i++)
-            for (int j = 0; j < 4; j++) {
-                value[i][j].render(x + i, y + j);
             }
     }
 

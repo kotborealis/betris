@@ -197,7 +197,17 @@ public class Game {
     }
 
     private void renderTetramino() {
+        cur.renderShadow();
         cur.render();
+    }
+
+    private void renderTetraminoPool() {
+        for(int i = 0; i < Math.min(bag.size(), 4); i++){
+            Tetramino t = new Tetramino(null, bag.get(i));
+            t.x = 12;
+            t.y = 5 + i*5;
+            t.render();
+        }
     }
 
     public void render() {
@@ -206,5 +216,6 @@ public class Game {
         renderField();
         renderWell();
         renderTetramino();
+        renderTetraminoPool();
     }
 }
