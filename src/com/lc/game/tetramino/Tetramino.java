@@ -99,7 +99,7 @@ public class Tetramino {
         return val;
     }
 
-    public void rotateRight(boolean checkCollision) {
+    public boolean rotateRight(boolean checkCollision) {
         n = (n + 1) % 4;
         value = Tetraminos.tetraminos[n % 4][type.ordinal()];
 
@@ -110,12 +110,15 @@ public class Tetramino {
             else
                 wallKickData = rightWallKickData;
 
-            if (wallKickTest(wallKickData))
+            if (wallKickTest(wallKickData)) {
                 rotateLeft(false);
+                return false;
+            }
         }
+        return true;
     }
 
-    public void rotateLeft(boolean checkCollision) {
+    public boolean rotateLeft(boolean checkCollision) {
         n = (n + 4 - 1) % 4;
         value = Tetraminos.tetraminos[n % 4][type.ordinal()];
         if (checkCollision && checkCollision()) {
@@ -125,9 +128,12 @@ public class Tetramino {
             else
                 wallKickData = leftWallKickData;
 
-            if (wallKickTest(wallKickData))
+            if (wallKickTest(wallKickData)) {
                 rotateRight(false);
+                return false;
+            }
         }
+        return true;
     }
 
     private boolean wallKickTest(int[][][] wallKickData) {
@@ -147,30 +153,31 @@ public class Tetramino {
         return !success;
     }
 
-    public void moveRight() {
+    public boolean moveRight() {
         x++;
+        boolean success = !checkCollision();
         shouldStop(1, 0);
+        return success;
     }
 
-    public void moveLeft() {
+    public boolean moveLeft() {
         x--;
+        boolean success = !checkCollision();
         shouldStop(-1, 0);
+        return success;
     }
 
     public boolean moveDown() {
         y++;
+        return shouldStop(0, 1);
+    }
 
-        boolean shouldStop = shouldStop(0, 1);
-
-        if (shouldStop) {
-            for (int i = minX(); i <= maxX(); i++)
-                for (int j = minY(); j <= maxY(); j++) {
-                    if (value[i][j] != Blocks.E)
-                        well[x + i][y + j] = value[i][j];
-                }
-        }
-
-        return shouldStop;
+    public void placeInWell() {
+        for (int i = minX(); i <= maxX(); i++)
+            for (int j = minY(); j <= maxY(); j++) {
+                if (value[i][j] != Blocks.E)
+                    well[x + i][y + j] = value[i][j];
+            }
     }
 
     private boolean checkCollision() {

@@ -10,8 +10,10 @@ import static org.lwjgl.opengl.GL11.*;
 
 public class Game {
     @SuppressWarnings("FieldCanBeLocal")
-    private float drop_ratio = 2.5f;
-    private long lastNanos = System.nanoTime();
+    private float dropRatio = 2.5f;
+    private long dropRatioLastNanos = System.nanoTime();
+
+    private float lockDelayFrames = -1;
 
     private Texture background;
     private float w_width;
@@ -42,34 +44,84 @@ public class Game {
         gameControls.handleKey(key, action);
     }
 
+    private void initLock() {
+        if (lockDelayFrames >= 0) return;
+        lockDelayFrames = 50;
+    }
+
+    private void resetLock() {
+        if (lockDelayFrames == -1) return;
+        lockDelayFrames = 50;
+    }
+
+    private void lock(boolean force) {
+        if (lockDelayFrames == -1 && !force) return;
+        bag.current.placeInWell();
+        bag.spawnTetramino();
+        lockDelayFrames = -1;
+    }
+
+    private void lock() {
+        lock(true);
+    }
+
 
     public void update() {
-        long targetNanos = lastNanos + (long) (1_000_000_000.0f / drop_ratio) - 1_000_000L;
+        long targetNanos = dropRatioLastNanos + (long) (1_000_000_000.0f / dropRatio) - 1_000_000L;
         if (System.nanoTime() >= targetNanos) {
-            lastNanos = System.nanoTime();
+            dropRatioLastNanos = System.nanoTime();
             if (bag.current.moveDown())
-                bag.spawnTetramino();
+                initLock();
         }
 
-        for (int i = 0; i < gameControls.rotateLeft; i++)
-            bag.current.rotateLeft(true);
+        if (lockDelayFrames > 0) lockDelayFrames--;
+        if (lockDelayFrames == 0) lock();
+
+        for (int i = 0; i < gameControls.rotateLeft; i++) {
+            if (bag.current.rotateLeft(true))
+                resetLock();
+            else
+                break;
+        }
         gameControls.rotateLeft = 0;
-        for (int i = 0; i < gameControls.rotateRight; i++)
-            bag.current.rotateRight(true);
+
+        for (int i = 0; i < gameControls.rotateRight; i++) {
+            if (bag.current.rotateRight(true))
+                resetLock();
+            else
+                break;
+        }
         gameControls.rotateRight = 0;
+
         for (int i = 0; i < gameControls.moveDown; i++)
             if (bag.current.moveDown()) {
-                bag.spawnTetramino();
+                initLock();
                 break;
             }
         gameControls.moveDown = 0;
 
+        if (gameControls.hardDrop) {
+            //noinspection StatementWithEmptyBody
+            while (!bag.current.moveDown()) ;
+            lock(true);
+            gameControls.hardDrop = false;
+        }
+
         if (gameControls.moveLR > 0)
-            for (int i = 0; i < gameControls.moveLR; i++)
-                bag.current.moveRight();
+            for (int i = 0; i < gameControls.moveLR; i++) {
+                if (bag.current.moveRight())
+                    resetLock();
+                else
+                    break;
+            }
+
         if (gameControls.moveLR < 0)
-            for (int i = 0; i > gameControls.moveLR; i--)
-                bag.current.moveLeft();
+            for (int i = 0; i > gameControls.moveLR; i--) {
+                if (bag.current.moveLeft())
+                    resetLock();
+                else
+                    break;
+            }
         gameControls.moveLR = 0;
 
         for (int j = 0; j < well[0].length; j++) {
