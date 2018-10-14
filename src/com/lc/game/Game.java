@@ -166,21 +166,21 @@ public class Game {
     private void renderField() {
         glColor3f(1, 1, 1);
         glBegin(GL_LINE_STRIP);
-        glVertex2f(w_width / 2 - Block.size * 10 / 2, 0);
-        glVertex2f(w_width / 2 - Block.size * 10 / 2, 500);
-        glVertex2f(w_width / 2 + Block.size * 10 / 2, 500);
-        glVertex2f(w_width / 2 + Block.size * 10 / 2, 0);
+        glVertex2f(150, 0);
+        glVertex2f(150, 500);
+        glVertex2f(150 + Block.size * 10, 500);
+        glVertex2f(150 + Block.size * 10, 0);
         glEnd();
 
         glColor3f(137 / 255.f, 42 / 255.f, 118 / 225.f);
         glBegin(GL_LINES);
         for (int i = 1; i < 20; i++) {
-            glVertex2f(w_width / 2 - Block.size * 10 / 2, i * Block.size);
-            glVertex2f(w_width / 2 + Block.size * 10 / 2, i * Block.size);
+            glVertex2f(150, i * Block.size);
+            glVertex2f(150 + Block.size * 10, i * Block.size);
         }
         for (int j = 1; j < 10; j++) {
-            glVertex2f(w_width / 2 - Block.size * 10 / 2 + j * Block.size, 0);
-            glVertex2f(w_width / 2 - Block.size * 10 / 2 + j * Block.size, 500);
+            glVertex2f(150 + j * Block.size, 0);
+            glVertex2f(150 + j * Block.size, 500);
         }
         glEnd();
     }

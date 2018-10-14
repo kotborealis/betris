@@ -43,7 +43,7 @@ public class Block {
         if (tex == null) return;
 
         float top_edge = -100;
-        float left_edge = 275;
+        float left_edge = 150;
 
         tex.bind();
 
