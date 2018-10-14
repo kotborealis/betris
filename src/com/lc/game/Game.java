@@ -3,14 +3,9 @@ package com.lc.game;
 import com.lc.Main;
 import com.lc.Texture;
 import com.lc.game.mino.Block;
-import com.lc.game.mino.BlockType;
 import com.lc.game.mino.Blocks;
 import com.lc.game.tetramino.Tetramino;
 
-import java.util.ArrayList;
-import java.util.Collections;
-
-import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 
 public class Game {
@@ -22,85 +17,60 @@ public class Game {
     private float w_width;
     private float w_height;
 
-    private Tetramino cur;
-    private BlockType stash = null;
-    private boolean stashedOnThisTurn = false;
-    private int queuedMove = 0;
-    private int queuedMoveDown = 0;
-    private int queuedRotateRight = 0;
-    private int queuedRotateLeft = 0;
-
-    private ArrayList<BlockType> bag;
+    TetraminoBag bag;
+    private GameControls gameControls;
 
     private Block well[][] = new Block[10][24];
 
     public Game() {
+        gameControls = new GameControls(this);
+        bag = new TetraminoBag(well);
+
         w_height = Main.window_height;
         w_width = Main.window_width;
-
-        bag = new ArrayList<>();
 
         for (int i = 0; i < well.length; i++)
             for (int j = 0; j < well[0].length; j++)
                 well[i][j] = Blocks.E;
 
-        spawnTetramino();
+        bag.spawnTetramino();
 
         background = Texture.loadTexture("res/select00.jpg");
     }
 
     public void handleKey(int key, int action) {
-        if (action == GLFW_PRESS || action == GLFW_REPEAT) {
-            if (key == GLFW_KEY_LEFT) queuedMove--;
-            if (key == GLFW_KEY_RIGHT) queuedMove++;
-            if (key == GLFW_KEY_DOWN) queuedMoveDown++;
-            if (key == GLFW_KEY_SPACE) queuedMoveDown += 24;
-            if (key == GLFW_KEY_Z) queuedRotateLeft++;
-            if (key == GLFW_KEY_X || key == GLFW_KEY_UP) queuedRotateRight++;
-            if (key == GLFW_KEY_C) {
-                if (stashedOnThisTurn) return;
-                stashedOnThisTurn = true;
-
-                if (stash == null) {
-                    stash = cur.type;
-                    spawnTetramino();
-                } else {
-                    BlockType type = cur.type;
-                    spawnTetramino(stash);
-                    stash = type;
-                }
-            }
-        }
+        gameControls.handleKey(key, action);
     }
+
 
     public void update() {
         long targetNanos = lastNanos + (long) (1_000_000_000.0f / drop_ratio) - 1_000_000L;
         if (System.nanoTime() >= targetNanos) {
             lastNanos = System.nanoTime();
-            if (cur.moveDown())
-                spawnTetramino();
+            if (bag.current.moveDown())
+                bag.spawnTetramino();
         }
 
-        for (int i = 0; i < queuedRotateLeft; i++)
-            cur.rotateLeft(true);
-        queuedRotateLeft = 0;
-        for (int i = 0; i < queuedRotateRight; i++)
-            cur.rotateRight(true);
-        queuedRotateRight = 0;
-        for (int i = 0; i < queuedMoveDown; i++)
-            if (cur.moveDown()) {
-                spawnTetramino();
+        for (int i = 0; i < gameControls.rotateLeft; i++)
+            bag.current.rotateLeft(true);
+        gameControls.rotateLeft = 0;
+        for (int i = 0; i < gameControls.rotateRight; i++)
+            bag.current.rotateRight(true);
+        gameControls.rotateRight = 0;
+        for (int i = 0; i < gameControls.moveDown; i++)
+            if (bag.current.moveDown()) {
+                bag.spawnTetramino();
                 break;
             }
-        queuedMoveDown = 0;
+        gameControls.moveDown = 0;
 
-        if (queuedMove > 0)
-            for (int i = 0; i < queuedMove; i++)
-                cur.moveRight();
-        if (queuedMove < 0)
-            for (int i = 0; i > queuedMove; i--)
-                cur.moveLeft();
-        queuedMove = 0;
+        if (gameControls.moveLR > 0)
+            for (int i = 0; i < gameControls.moveLR; i++)
+                bag.current.moveRight();
+        if (gameControls.moveLR < 0)
+            for (int i = 0; i > gameControls.moveLR; i--)
+                bag.current.moveLeft();
+        gameControls.moveLR = 0;
 
         for (int j = 0; j < well[0].length; j++) {
             int empty = 10;
@@ -119,31 +89,6 @@ public class Game {
         }
         for (int i = 0; i < well.length; i++)
             well[i][0] = Blocks.E;
-    }
-
-    private void spawnTetramino() {
-        stashedOnThisTurn = false;
-
-        if (bag.size() <= 7) {
-            ArrayList<BlockType> new_bag = new ArrayList<BlockType>() {{
-                add(BlockType.I);
-                add(BlockType.O);
-                add(BlockType.T);
-                add(BlockType.S);
-                add(BlockType.Z);
-                add(BlockType.J);
-                add(BlockType.L);
-            }};
-            Collections.shuffle(new_bag);
-            bag.addAll(new_bag);
-        }
-        BlockType type = bag.get(0);
-        bag.remove(0);
-        cur = new Tetramino(well, type);
-    }
-
-    private void spawnTetramino(BlockType type) {
-        cur = new Tetramino(well, type);
     }
 
     private void renderProjection() {
@@ -218,8 +163,8 @@ public class Game {
     }
 
     private void renderTetramino() {
-        cur.renderShadow();
-        cur.render();
+        bag.current.renderShadow();
+        bag.current.render();
     }
 
     private void renderTetraminoPool() {
@@ -232,8 +177,8 @@ public class Game {
     }
 
     private void renderTetraminoStash() {
-        if (stash == null) return;
-        Tetramino t = new Tetramino(null, stash);
+        if (bag.stash == null) return;
+        Tetramino t = new Tetramino(null, bag.stash);
         t.x = -4;
         t.y = 5;
         t.render();
