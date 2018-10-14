@@ -1,11 +1,11 @@
 package com.lc.game;
 
 import com.lc.Main;
+import com.lc.Texture;
 import com.lc.game.mino.Block;
 import com.lc.game.mino.BlockType;
 import com.lc.game.mino.Blocks;
 import com.lc.game.tetramino.Tetramino;
-import com.lc.Texture;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,6 +23,8 @@ public class Game {
     private float w_height;
 
     private Tetramino cur;
+    private BlockType stash = null;
+    private boolean stashedOnThisTurn = false;
     private int queuedMove = 0;
     private int queuedMoveDown = 0;
     private int queuedRotateRight = 0;
@@ -55,6 +57,19 @@ public class Game {
             if (key == GLFW_KEY_SPACE) queuedMoveDown += 24;
             if (key == GLFW_KEY_Z) queuedRotateLeft++;
             if (key == GLFW_KEY_X) queuedRotateRight++;
+            if (key == GLFW_KEY_C) {
+                if (stashedOnThisTurn) return;
+                stashedOnThisTurn = true;
+
+                if (stash == null) {
+                    stash = cur.type;
+                    spawnTetramino();
+                } else {
+                    BlockType type = cur.type;
+                    spawnTetramino(stash);
+                    stash = type;
+                }
+            }
         }
     }
 
@@ -107,6 +122,8 @@ public class Game {
     }
 
     private void spawnTetramino() {
+        stashedOnThisTurn = false;
+
         if (bag.size() <= 7) {
             ArrayList<BlockType> new_bag = new ArrayList<BlockType>() {{
                 add(BlockType.I);
@@ -122,6 +139,10 @@ public class Game {
         }
         BlockType type = bag.get(0);
         bag.remove(0);
+        cur = new Tetramino(well, type);
+    }
+
+    private void spawnTetramino(BlockType type) {
         cur = new Tetramino(well, type);
     }
 
@@ -210,6 +231,14 @@ public class Game {
         }
     }
 
+    private void renderTetraminoStash() {
+        if (stash == null) return;
+        Tetramino t = new Tetramino(null, stash);
+        t.x = -4;
+        t.y = 5;
+        t.render();
+    }
+
     public void render() {
         renderProjection();
         renderBackground();
@@ -217,5 +246,6 @@ public class Game {
         renderWell();
         renderTetramino();
         renderTetraminoPool();
+        renderTetraminoStash();
     }
 }
