@@ -18,24 +18,24 @@ public class Texture {
 
         ByteBuffer image;
         int width, height;
-        try (MemoryStack stack = MemoryStack.stackPush()) {
-            /* Prepare image buffers */
-            IntBuffer w = stack.mallocInt(1);
-            IntBuffer h = stack.mallocInt(1);
-            IntBuffer comp = stack.mallocInt(1);
 
-            /* Load image */
-            stbi_set_flip_vertically_on_load(true);
-            image = stbi_load(path, w, h, comp, 4);
-            if (image == null) {
-                throw new RuntimeException("Failed to load a texture file!"
-                        + System.lineSeparator() + stbi_failure_reason());
-            }
+        MemoryStack stack = MemoryStack.stackPush();
+        /* Prepare image buffers */
+        IntBuffer w = stack.mallocInt(1);
+        IntBuffer h = stack.mallocInt(1);
+        IntBuffer comp = stack.mallocInt(1);
 
-            /* Get width and height of image */
-            width = w.get();
-            height = h.get();
+        /* Load image */
+        stbi_set_flip_vertically_on_load(true);
+        image = stbi_load(path, w, h, comp, 4);
+        if (image == null) {
+            throw new RuntimeException("Failed to load a texture file!"
+                    + System.lineSeparator() + stbi_failure_reason());
         }
+
+        /* Get width and height of image */
+        width = w.get();
+        height = h.get();
 
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
