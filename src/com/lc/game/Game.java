@@ -186,8 +186,8 @@ public class Game {
         glBegin(GL_LINE_STRIP);
         glVertex2f(150, 0);
         glVertex2f(150, 500);
-        glVertex2f(150 + Block.size * 10, 500);
-        glVertex2f(150 + Block.size * 10, 0);
+        glVertex2f(150 + Block.size * 10 + 1, 500);
+        glVertex2f(150 + Block.size * 10 + 1, 0);
         glEnd();
 
         glColor3f(137 / 255.f, 42 / 255.f, 118 / 225.f);
