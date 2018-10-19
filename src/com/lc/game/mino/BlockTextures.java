@@ -14,13 +14,13 @@ class BlockTextures {
 
     static void init() {
         if (init_done) return;
-        I = Texture.loadTexture("res/block/I.png");
-        O = Texture.loadTexture("res/block/O.png");
-        T = Texture.loadTexture("res/block/T.png");
-        S = Texture.loadTexture("res/block/S.png");
-        Z = Texture.loadTexture("res/block/Z.png");
-        J = Texture.loadTexture("res/block/J.png");
-        L = Texture.loadTexture("res/block/L.png");
+        I = new Texture("res/block/I.png");
+        O = new Texture("res/block/O.png");
+        T = new Texture("res/block/T.png");
+        S = new Texture("res/block/S.png");
+        Z = new Texture("res/block/Z.png");
+        J = new Texture("res/block/J.png");
+        L = new Texture("res/block/L.png");
         init_done = true;
     }
 }

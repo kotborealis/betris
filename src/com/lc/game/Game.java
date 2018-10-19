@@ -37,7 +37,7 @@ public class Game {
 
         bag.spawnTetramino();
 
-        background = Texture.loadTexture("res/select00.jpg");
+        background = new Texture("res/select00.jpg");
     }
 
     public void handleKey(int key, int action) {
