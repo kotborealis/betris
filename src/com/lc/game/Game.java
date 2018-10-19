@@ -182,15 +182,12 @@ public class Game {
     }
 
     private void renderField() {
-        glColor3f(1, 1, 1);
-        glBegin(GL_LINE_STRIP);
-        glVertex2f(150, 0);
-        glVertex2f(150, 500);
-        glVertex2f(150 + Block.size * 10 + 1, 500);
-        glVertex2f(150 + Block.size * 10 + 1, 0);
-        glEnd();
+        // Enable alpha
+        glBlendFunc(GL_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glEnable(GL_BLEND);
 
-        glColor3f(137 / 255.f, 42 / 255.f, 118 / 225.f);
+        // First pass
+        glColor4f(.7f, .5f, .5f, .5f);
         glBegin(GL_LINES);
         for (int i = 1; i < 20; i++) {
             glVertex2f(150, i * Block.size);
@@ -200,6 +197,31 @@ public class Game {
             glVertex2f(150 + j * Block.size, 0);
             glVertex2f(150 + j * Block.size, 500);
         }
+        glEnd();
+
+        // Second pass
+        glColor4f(.1f, .3f, .1f, .5f);
+        glBegin(GL_LINES);
+        for (int i = 1; i < 20; i++) {
+            glVertex2f(150 + 1, i * Block.size + 1);
+            glVertex2f(150 + Block.size * 10 + 1, i * Block.size + 1);
+        }
+        for (int j = 1; j < 10; j++) {
+            glVertex2f(150 + j * Block.size + 1, 1);
+            glVertex2f(150 + j * Block.size + 1, 500 + 1);
+        }
+        glEnd();
+
+        // Disable blend
+        glDisable(GL_BLEND);
+
+        // Border
+        glColor3f(.8f, 1, 1);
+        glBegin(GL_LINE_STRIP);
+        glVertex2f(150, 0);
+        glVertex2f(150, 500);
+        glVertex2f(150 + Block.size * 10 + 1, 500);
+        glVertex2f(150 + Block.size * 10 + 1, 0);
         glEnd();
     }
 

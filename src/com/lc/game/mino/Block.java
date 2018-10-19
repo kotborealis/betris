@@ -47,8 +47,11 @@ public class Block {
 
         tex.bind();
 
+        glBlendFunc(GL_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glEnable(GL_BLEND);
+
         if (shadow)
-            glColor4f(.5f, .5f, .5f, 1);
+            glColor4f(.5f, .5f, .5f, .5f);
         else
             glColor4f(1, 1, 1, 1);
 
@@ -63,6 +66,9 @@ public class Block {
         glTexCoord2f(0, 0);
         glVertex2f(left_edge + x * Block.size, top_edge + y * Block.size + Block.size);
         glEnd();
+        glDisable(GL_TEXTURE_2D);
+
+        glDisable(GL_BLEND);
     }
 
     public void render(float x, float y){
