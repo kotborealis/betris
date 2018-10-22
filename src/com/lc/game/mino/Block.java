@@ -1,6 +1,9 @@
 package com.lc.game.mino;
 
 import com.lc.Texture;
+import org.lwjgl.BufferUtils;
+
+import java.nio.FloatBuffer;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -8,8 +11,11 @@ public class Block {
     public static final float size = 25;
     private Texture tex;
 
+    private static FloatBuffer texture_coords;
+
     Block(BlockType type) {
         BlockTextures.init();
+        init_tex_coords();
 
         switch (type) {
             case I:
@@ -39,6 +45,17 @@ public class Block {
         }
     }
 
+    private void init_tex_coords() {
+        if (texture_coords != null) return;
+
+        texture_coords = BufferUtils.createFloatBuffer(4 * 2);
+        texture_coords.put(new float[]{0, 1});
+        texture_coords.put(new float[]{1, 1});
+        texture_coords.put(new float[]{1, 0});
+        texture_coords.put(new float[]{0, 0});
+        texture_coords.flip();
+    }
+
     public void render(float x, float y, boolean shadow) {
         if (tex == null) return;
 
@@ -47,25 +64,25 @@ public class Block {
 
         tex.bind();
 
-        glBlendFunc(GL_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        glEnable(GL_BLEND);
-
         if (shadow)
-            glColor4f(.5f, .5f, .5f, .5f);
+            glColor3f(.5f, .5f, .5f);
         else
-            glColor4f(1, 1, 1, 1);
+            glColor3f(1.f, 1.f, 1.f);
+
+        FloatBuffer vertices = BufferUtils.createFloatBuffer(4 * 2);
+        vertices.put(new float[]{left_edge + x * Block.size, top_edge + y * Block.size});
+        vertices.put(new float[]{left_edge + x * Block.size + Block.size, top_edge + y * Block.size});
+        vertices.put(new float[]{left_edge + x * Block.size + Block.size, top_edge + y * Block.size + Block.size});
+        vertices.put(new float[]{left_edge + x * Block.size, top_edge + y * Block.size + Block.size});
+        vertices.flip();
+
+        glEnableClientState(GL_VERTEX_ARRAY);
+        glVertexPointer(2, GL_FLOAT, 0, vertices);
+        glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+        glTexCoordPointer(2, GL_FLOAT, 0, texture_coords);
 
         glEnable(GL_TEXTURE_2D);
-        glBegin(GL_QUADS);
-        glTexCoord2f(0, 1);
-        glVertex2f(left_edge + x * Block.size, top_edge + y * Block.size);
-        glTexCoord2f(1, 1);
-        glVertex2f(left_edge + x * Block.size + Block.size, top_edge + y * Block.size);
-        glTexCoord2f(1, 0);
-        glVertex2f(left_edge + x * Block.size + Block.size, top_edge + y * Block.size + Block.size);
-        glTexCoord2f(0, 0);
-        glVertex2f(left_edge + x * Block.size, top_edge + y * Block.size + Block.size);
-        glEnd();
+        glDrawArrays(GL_QUADS, 0, 4);
         glDisable(GL_TEXTURE_2D);
 
         glDisable(GL_BLEND);
