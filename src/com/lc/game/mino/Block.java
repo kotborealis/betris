@@ -12,6 +12,7 @@ public class Block {
     private Texture tex;
 
     private static FloatBuffer texture_coords;
+    private FloatBuffer vertices = BufferUtils.createFloatBuffer(4 * 2);
 
     Block(BlockType type) {
         BlockTextures.init();
@@ -69,7 +70,7 @@ public class Block {
         else
             glColor3f(1.f, 1.f, 1.f);
 
-        FloatBuffer vertices = BufferUtils.createFloatBuffer(4 * 2);
+        vertices.clear();
         vertices.put(new float[]{left_edge + x * Block.size, top_edge + y * Block.size});
         vertices.put(new float[]{left_edge + x * Block.size + Block.size, top_edge + y * Block.size});
         vertices.put(new float[]{left_edge + x * Block.size + Block.size, top_edge + y * Block.size + Block.size});
