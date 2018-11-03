@@ -78,15 +78,21 @@ public class Block {
         vertices.flip();
 
         glEnableClientState(GL_VERTEX_ARRAY);
-        glVertexPointer(2, GL_FLOAT, 0, vertices);
         glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+
+        glVertexPointer(2, GL_FLOAT, 0, vertices);
         glTexCoordPointer(2, GL_FLOAT, 0, texture_coords);
 
         glEnable(GL_TEXTURE_2D);
+
         glDrawArrays(GL_QUADS, 0, 4);
+
         glDisable(GL_TEXTURE_2D);
 
         glDisable(GL_BLEND);
+
+        glDisableClientState(GL_VERTEX_ARRAY);
+        glDisableClientState(GL_TEXTURE_COORD_ARRAY);
     }
 
     public void render(float x, float y){
